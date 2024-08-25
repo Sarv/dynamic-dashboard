@@ -20,7 +20,7 @@ const API_KEY = '766UZHTGN1474WLQ'; // Replace with your Alpha Vantage API Key
 
 async function createNSEIndex() {
   try {
-    const mappingPath = path.join(__dirname, '../lib', 'stock-Index-Mapping.json');
+    const mappingPath = path.join(__dirname, '../lib', 'stock-Index-insert.json');
     const mapping = await fs.readFile(mappingPath, 'utf-8');
     const indexMapping = JSON.parse(mapping);
 

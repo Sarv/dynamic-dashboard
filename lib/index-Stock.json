@@ -1,0 +1,35 @@
+{
+  "stock_market_data" : {
+    "mappings" : {
+      "properties" : {
+        "close" : {
+          "type" : "long"
+        },
+        "high" : {
+          "type" : "long"
+        },
+        "low" : {
+          "type" : "long"
+        },
+        "open" : {
+          "type" : "long"
+        },
+        "symbol" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "tradedDate" : {
+          "type" : "date"
+        },
+        "volume" : {
+          "type" : "long"
+        }
+      }
+    }
+  }
+}
