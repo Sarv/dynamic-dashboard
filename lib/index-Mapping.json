@@ -1,0 +1,16 @@
+{
+  "mappings": {
+    "properties": {
+      "symbol": { "type": "keyword" },
+      "companyName": { "type": "keyword" },
+      "lastTradedPrice": { "type": "float" },
+      "change": { "type": "float" },
+      "percentageChange": { "type": "float" },
+      "dayHigh": { "type": "float" },
+      "dayLow": { "type": "float" },
+      "previousClose": { "type": "float" },
+      "volume": { "type": "integer" },
+      "tradedDate": { "type": "date" }
+    }
+  }
+}
