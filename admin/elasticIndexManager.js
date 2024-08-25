@@ -1,3 +1,5 @@
+// File Path : admin/elasticIndexManager.js
+
 const { Client } = require('@elastic/elasticsearch');
 
 // Initialize the Elasticsearch client
