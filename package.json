@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "@elastic/elasticsearch": "^8.15.0"
+    "@elastic/elasticsearch": "^8.15.0",
+    "axios": "^1.7.5"
   }
 }
