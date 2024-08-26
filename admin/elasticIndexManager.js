@@ -14,12 +14,15 @@ function getIndexMapping(indexName) {
           properties: {
             title: { type: 'text' },
             create_time: { type: 'date', format: 'epoch_millis' },
+            update_time: { type: 'date', format: 'epoch_millis' },
             status: { type: 'keyword' },
+            user_id: { type: 'keyword' },
             modules: {
               type: 'nested',
               properties: {
                 module_id: { type: 'keyword' },
                 position_x: { type: 'long' },
+                position_y: { type: 'long' },
                 width: { type: 'long' },
                 height: { type: 'long' }
               }
