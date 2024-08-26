@@ -289,7 +289,7 @@ This table was created during our discussion to summarize the axis configuration
 | **Data Table**              | x                   | Multiple                 | y                        | Multiple                  | N/A             | 
 |||||||
 
-----------
+--------
 
 ### Explanation with Detailed Examples
 
