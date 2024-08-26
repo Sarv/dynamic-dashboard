@@ -28,6 +28,52 @@ function getIndexMapping(indexName) {
           }
         }
       };
+
+    
+      
+      case 'dashboard_modules':
+        return {
+          mappings: {
+            properties: {
+              title: { type: 'text' },
+              userid: { type: 'keyword' },
+              filter_s: { type: 'text' },
+              data_view: { type: 'keyword' },
+              module_type: { type: 'keyword' },
+              dashboard_id: { type: 'keyword' },
+              create_time: { type: 'date', format: 'epoch_millis' },
+              main_axis: {
+                type: 'nested',
+                properties: {
+                  function_key: { type: 'keyword' },
+                  field_name: { type: 'keyword' },
+                  options: {
+                    type: 'nested',
+                    properties: {
+                      option_name: { type: 'keyword' },
+                      option_value: { type: 'keyword' }
+                    }
+                  }
+                }
+              },
+              value_axis: {
+                type: 'nested', 
+                properties: {
+                  function_key: { type: 'keyword' },
+                  field_name: { type: 'keyword' },
+                  options: {
+                    type: 'nested',
+                    properties: {
+                      option_name: { type: 'keyword' },
+                      option_value: { type: 'keyword' }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        };
+
     // Add other indexes here
     case 'other_index':
       return {
