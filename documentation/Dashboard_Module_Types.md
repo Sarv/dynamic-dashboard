@@ -1,18 +1,18 @@
-## Detailed Documentation: `dashboard_Module_Types`
+## Detailed Documentation: `DASHBOARD_MODULE_TYPES`
 
 ----------
 
 #### Overview
 
-The `dashboard_Module_Types` constant in the **dynamic dashboard module** defines the various visualization types available (such as bar charts, line charts, pie charts, etc.) and the corresponding configurations for the axes and color options for each visualization. This constant is crucial for creating and managing different types of visualizations within the dashboard, ensuring that the correct axes and options are used based on the selected graph type.
+The `DASHBOARD_MODULE_TYPES` constant in the **dynamic dashboard module** defines the various visualization types available (such as bar charts, line charts, pie charts, etc.) and the corresponding configurations for the axes and color options for each visualization. This constant is crucial for creating and managing different types of visualizations within the dashboard, ensuring that the correct axes and options are used based on the selected graph type.
 
 Each graph type is associated with specific axis configurations (e.g., **main axis**, **value axis**), frequency (whether the axis allows **single** or **multiple** fields), and options for color customization.
 
 ----------
 
-### Structure of `dashboard_Module_Types`
+### Structure of `DASHBOARD_MODULE_TYPES`
 
-The structure of `dashboard_Module_Types` is an object where each key represents a type of graph (e.g., `bar_horizontal`, `line_chart`). Each graph type object contains several fields:
+The structure of `DASHBOARD_MODULE_TYPES` is an object where each key represents a type of graph (e.g., `bar_horizontal`, `line_chart`). Each graph type object contains several fields:
 
 1.  **graphType**: The name of the graph type (e.g., `Bar Horizontal`, `Pie Chart`).
 2.  **mainAxis**: Specifies which axis is the main axis for the graph (e.g., `x`, `y`).
@@ -131,13 +131,13 @@ heat_map: {
 
 ----------
 
-### Interaction with `Dashboard_Module_Functions`
+### Interaction with `DASHBOARD_MODULE_FUNCTIONS`
 
-The `dashboard_Module_Types` constant interacts closely with the `Dashboard_Module_Functions` constant, which defines the various operations or aggregations that can be applied to the data. The configuration of the axes in `dashboard_Module_Types` determines which functions from `Dashboard_Module_Functions` are valid for each graph type.
+The `DASHBOARD_MODULE_TYPES` constant interacts closely with the `DASHBOARD_MODULE_FUNCTIONS` constant, which defines the various operations or aggregations that can be applied to the data. The configuration of the axes in `DASHBOARD_MODULE_TYPES` determines which functions from `DASHBOARD_MODULE_FUNCTIONS` are valid for each graph type.
 
 For example:
 
--   A **Line Chart** might use a `date_histogram` function from `Dashboard_Module_Functions` to group data by time on the **x-axis**, and apply an `average` function to the **y-axis** to plot the average value over time.
+-   A **Line Chart** might use a `date_histogram` function from `DASHBOARD_MODULE_FUNCTIONS` to group data by time on the **x-axis**, and apply an `average` function to the **y-axis** to plot the average value over time.
 
 The two constants work together to ensure that the correct operations are applied to the correct axes, providing flexibility and accuracy in data visualization.
 
@@ -146,7 +146,7 @@ The two constants work together to ensure that the correct operations are applie
 
 
 
-In the context of `dashboard_Module_Types`, visualizations can generally be categorized into two groups:
+In the context of `DASHBOARD_MODULE_TYPES`, visualizations can generally be categorized into two groups:
 
 1.  **Visualizations with Both X and Y Axes**: These are traditional Cartesian visualizations where data is plotted along both a horizontal (X-axis) and a vertical (Y-axis) axis.
 2.  **Visualizations without Explicit X and Y Axes**: These visualizations, such as pie charts or metrics, represent data in alternative formats that do not require Cartesian coordinates.
@@ -203,13 +203,13 @@ Examples of graphs without explicit X and Y axes include:
 
 -   **Pie Chart**: Slices represent different categories, and the size of each slice corresponds to the proportion of a particular value (e.g., sales distribution by product).
 
-### Interaction with `dashboard_Module_Functions`
+### Interaction with `DASHBOARD_MODULE_FUNCTIONS`
 
-In graphs with both X and Y axes, the interaction between `dashboard_Module_Functions` and `dashboard_Module_Types` becomes more complex, as certain functions (like `sum` or `average`) are applied to the **Value Axis**, while other functions (like `terms` or `date_histogram`) are applied to the **Main Axis**. For example:
+In graphs with both X and Y axes, the interaction between `DASHBOARD_MODULE_FUNCTIONS` and `DASHBOARD_MODULE_TYPES` becomes more complex, as certain functions (like `sum` or `average`) are applied to the **Value Axis**, while other functions (like `terms` or `date_histogram`) are applied to the **Main Axis**. For example:
 
 -   In a **Bar Vertical Stacked Chart**, the **Main Axis** groups the data by categories, while the **Value Axis** applies the function to aggregate metrics (e.g., summing the values for each category).
 
-In graphs without X and Y axes, such as a **Pie Chart**, only the **Main Axis** (e.g., slices of the pie) is relevant, and functions are applied to group the data by categories. Here, the interaction between the `dashboard_Module_Functions` and `dashboard_Module_Types` remains simpler, as there is no second axis to account for.
+In graphs without X and Y axes, such as a **Pie Chart**, only the **Main Axis** (e.g., slices of the pie) is relevant, and functions are applied to group the data by categories. Here, the interaction between the `DASHBOARD_MODULE_FUNCTIONS` and `DASHBOARD_MODULE_TYPES` remains simpler, as there is no second axis to account for.
 
 ----------
 
@@ -233,7 +233,7 @@ This concept clarifies which visualizations support complex two-axis analysis an
 
 ## Concept of Frequency
 
-The **Frequency** in the context of `dashboard_Module_Types` refers to how many fields or values can be plotted on a specific axis in a given visualization type. Frequency can be classified as either **Single** or **Multiple** depending on whether the axis allows one or more fields or values.
+The **Frequency** in the context of `DASHBOARD_MODULE_TYPES` refers to how many fields or values can be plotted on a specific axis in a given visualization type. Frequency can be classified as either **Single** or **Multiple** depending on whether the axis allows one or more fields or values.
 
 -   **Single Frequency**: Indicates that the axis can only handle a single field or value. For example, in a simple bar chart, the **Main Axis** (categories) might only accommodate one field (e.g., product names).
     
@@ -329,8 +329,8 @@ This concept of **frequency** helps control how complex or simple each visualiza
 
 ### Summary
 
-The `dashboard_Module_Types` constant is a critical component of the dynamic dashboard module, defining how different types of visualizations should be configured and rendered. It ensures that the appropriate axes are used for each graph type, allows for color customization, and determines whether multiple fields or values can be plotted on each axis.
+The `DASHBOARD_MODULE_TYPES` constant is a critical component of the dynamic dashboard module, defining how different types of visualizations should be configured and rendered. It ensures that the appropriate axes are used for each graph type, allows for color customization, and determines whether multiple fields or values can be plotted on each axis.
 
-By working in tandem with `Dashboard_Module_Functions`, it provides a robust framework for dynamic, flexible, and accurate data visualization.
+By working in tandem with `DASHBOARD_MODULE_FUNCTIONS`, it provides a robust framework for dynamic, flexible, and accurate data visualization.
 
 ----------

@@ -1,20 +1,20 @@
-## Documentation: `Dashboard_Module_Functions`
+## Documentation: `DASHBOARD_MODULE_FUNCTIONS`
 
-This documentation will break down the purpose, structure, and logic of the `Dashboard_Module_Functions` constant. It is designed to help other AI models or developers understand its usage and how it integrates into the dynamic dashboard module.
+This documentation will break down the purpose, structure, and logic of the `DASHBOARD_MODULE_FUNCTIONS` constant. It is designed to help other AI models or developers understand its usage and how it integrates into the dynamic dashboard module.
 
 ----------
 
 #### Overview
 
-`Dashboard_Module_Functions` defines the **functions** or **operations** that can be performed within the context of a dynamic dashboard. These functions represent various data processing or aggregation types, such as `sum`, `average`, `max`, `min`, and `date_histogram`. Each function specifies the requirements, valid data types, and the axis it operates on.
+`DASHBOARD_MODULE_FUNCTIONS` defines the **functions** or **operations** that can be performed within the context of a dynamic dashboard. These functions represent various data processing or aggregation types, such as `sum`, `average`, `max`, `min`, and `date_histogram`. Each function specifies the requirements, valid data types, and the axis it operates on.
 
 This constant is fundamental for ensuring that the appropriate function is applied to the correct data type and axis during dashboard generation. It enables validation and mapping of functions to different types of data, ensuring compatibility and correct output.
 
 ----------
 
-### Structure of `Dashboard_Module_Functions`
+### Structure of `DASHBOARD_MODULE_FUNCTIONS`
 
-The structure of `Dashboard_Module_Functions` is an array of objects, where each object represents a specific function. Each function contains several properties that define its characteristics:
+The structure of `DASHBOARD_MODULE_FUNCTIONS` is an array of objects, where each object represents a specific function. Each function contains several properties that define its characteristics:
 
 1.  **Function Name**: The name of the function (e.g., `sum`, `average`, `date_histogram`).
 2.  **Key**: A unique identifier for the function, useful for internal operations and referencing in the system.
@@ -26,12 +26,12 @@ The structure of `Dashboard_Module_Functions` is an array of objects, where each
 
 ### Example Structure
 
-Below is an example of how a single function is structured within the `Dashboard_Module_Functions` array:
+Below is an example of how a single function is structured within the `DASHBOARD_MODULE_FUNCTIONS` array:
 
 ```js 
 // File path: lib/es-config.js
 
-dashboard_Module_Functions: {
+DASHBOARD_MODULE_FUNCTIONS: {
 	sum: {
 		name:  'Sum',
 		validDataTypes: ['long', 'integer', 'short', 'byte', 'double', 'float', 'half_float', 'scaled_float'],
@@ -154,9 +154,9 @@ top_values: {
 ----------
 
 ### Usage in Dashboard Module
-In the dynamic dashboard module, `Dashboard_Module_Functions` is used to determine the correct function to apply based on user selections and the underlying data structure. When building a visualization, the system will:
+In the dynamic dashboard module, `DASHBOARD_MODULE_FUNCTIONS` is used to determine the correct function to apply based on user selections and the underlying data structure. When building a visualization, the system will:
 
-1.  Select the appropriate function from `Dashboard_Module_Functions` based on the user's query and the data type.
+1.  Select the appropriate function from `DASHBOARD_MODULE_FUNCTIONS` based on the user's query and the data type.
 2.  Validate the data type against the `validDataTypes` array to ensure compatibility.
 3.  Apply the function to the designated axis (`main` or `value`).
 4.  Use the `options` to configure additional parameters (such as grouping size or missing value handling).
@@ -168,49 +168,49 @@ This modular approach allows for flexibility in adding new functions, validating
 ### Key Benefits
 
 1.  **Validation**: Ensures that only valid functions are applied to the appropriate data types and axes.
-2.  **Modularity**: New functions can be easily added to the system by defining them in the `Dashboard_Module_Functions` array.
+2.  **Modularity**: New functions can be easily added to the system by defining them in the `DASHBOARD_MODULE_FUNCTIONS` array.
 3.  **Customization**: Users can customize their queries and visualizations by modifying the optional parameters for each function.
 
-This documentation provides a complete overview of how `Dashboard_Module_Functions` is structured, what each field represents, and how it integrates with the dynamic dashboard module.
+This documentation provides a complete overview of how `DASHBOARD_MODULE_FUNCTIONS` is structured, what each field represents, and how it integrates with the dynamic dashboard module.
 
 ----------
 
-### Documentation: `Dashboard_Module_Functions` and Its Relation with `dashboard_Module_Types`
+### Documentation: `DASHBOARD_MODULE_FUNCTIONS` and Its Relation with `DASHBOARD_MODULE_TYPES`
 
 ----------
 
 #### Overview
 
-`Dashboard_Module_Functions` defines the various functions that can be applied to the data, such as `sum`, `average`, or `date_histogram`, while `dashboard_Module_Types` specifies the structure of different visualizations (e.g., Bar Charts, Line Charts, Pie Charts) along with their axes and frequency of values. Together, these two constants enable dynamic and flexible dashboard creation by ensuring that the correct functions are applied to the correct visualizations.
+`DASHBOARD_MODULE_FUNCTIONS` defines the various functions that can be applied to the data, such as `sum`, `average`, or `date_histogram`, while `DASHBOARD_MODULE_TYPES` specifies the structure of different visualizations (e.g., Bar Charts, Line Charts, Pie Charts) along with their axes and frequency of values. Together, these two constants enable dynamic and flexible dashboard creation by ensuring that the correct functions are applied to the correct visualizations.
 
 
-## Relationship Between `Dashboard_Module_Functions` and `dashboard_Module_Types`
+## Relationship Between `DASHBOARD_MODULE_FUNCTIONS` and `DASHBOARD_MODULE_TYPES`
 
-The relationship between `Dashboard_Module_Functions` and `dashboard_Module_Types` is critical to determining how data is processed and visualized. Here's how they interact:
+The relationship between `DASHBOARD_MODULE_FUNCTIONS` and `DASHBOARD_MODULE_TYPES` is critical to determining how data is processed and visualized. Here's how they interact:
 
 1.  **Function Validation Based on Graph Type**:
     
-    -   Each graph type defined in `dashboard_Module_Types` has specific axes (main and value) and frequency settings (single or multiple). These settings dictate which functions from `Dashboard_Module_Functions` can be applied to the data.
+    -   Each graph type defined in `DASHBOARD_MODULE_TYPES` has specific axes (main and value) and frequency settings (single or multiple). These settings dictate which functions from `DASHBOARD_MODULE_FUNCTIONS` can be applied to the data.
     -   For example, a **Bar Horizontal** chart has a `mainAxis` on the **y-axis** and a `valueAxis` on the **x-axis**, with multiple frequencies allowed on the `valueAxis`. Functions such as `sum` or `average` that operate on numeric data types would be applied to the `valueAxis`.
 2.  **Function to Axis Mapping**:
     
-    -   In `Dashboard_Module_Functions`, each function is assigned to either the **main** or **value** axis via the `axis` field. This mapping ensures that the function is only applied to the relevant axis in the corresponding graph type defined in `dashboard_Module_Types`.
-    -   For example, the `date_histogram` function, which is applied to time-based data, is mapped to the `main` axis in `Dashboard_Module_Functions`. This function would be used in graph types like **Line Charts** or **Area Charts**, where time intervals are plotted on the `mainAxis`.
+    -   In `DASHBOARD_MODULE_FUNCTIONS`, each function is assigned to either the **main** or **value** axis via the `axis` field. This mapping ensures that the function is only applied to the relevant axis in the corresponding graph type defined in `DASHBOARD_MODULE_TYPES`.
+    -   For example, the `date_histogram` function, which is applied to time-based data, is mapped to the `main` axis in `DASHBOARD_MODULE_FUNCTIONS`. This function would be used in graph types like **Line Charts** or **Area Charts**, where time intervals are plotted on the `mainAxis`.
 3.  **Ensuring Compatibility**:
     
-    -   Before applying a function, the system will validate the selected function against the graph type's axes (as defined in `dashboard_Module_Types`) and the data type (as defined in `Dashboard_Module_Functions`). If the selected function is incompatible with the graph's axis type or data type, the system will either suggest an alternative function or notify the user.
+    -   Before applying a function, the system will validate the selected function against the graph type's axes (as defined in `DASHBOARD_MODULE_TYPES`) and the data type (as defined in `DASHBOARD_MODULE_FUNCTIONS`). If the selected function is incompatible with the graph's axis type or data type, the system will either suggest an alternative function or notify the user.
     -   For instance, the `top_values` function, which groups data by unique terms (e.g., categories), is applicable to `keyword` or `text` data types and is mapped to the `mainAxis`. It would be applied in a **Pie Chart** or **Donut Chart**, where the `mainAxis` slices the chart into categories.
 4.  **Determining Axis Frequency**:
     
-    -   The `mainAxisFrequency` and `valueAxisFrequency` fields in `dashboard_Module_Types` determine whether multiple fields or values can be plotted on the respective axes. Functions that operate on **multiple values** (such as `sum`, `average`, or `max`) will only be applied to axes with multiple frequencies allowed.
+    -   The `mainAxisFrequency` and `valueAxisFrequency` fields in `DASHBOARD_MODULE_TYPES` determine whether multiple fields or values can be plotted on the respective axes. Functions that operate on **multiple values** (such as `sum`, `average`, or `max`) will only be applied to axes with multiple frequencies allowed.
     -   For example, in a **Bar Vertical Stacked** chart, the `valueAxisFrequency` is set to `Multiple`, allowing for multiple values to be stacked on the **y-axis**. Functions like `sum` and `max` can therefore be applied.
 5.  **Dynamic Query Building**:
     
-    -   Together, `Dashboard_Module_Functions` and `dashboard_Module_Types` facilitate dynamic query building for the dashboard. The system uses the graph type from `dashboard_Module_Types` to determine the structure of the query (e.g., aggregating data by categories or time intervals) and selects the appropriate function from `Dashboard_Module_Functions` to process the data (e.g., calculating sums or averages).
-    -   For instance, if the user selects a **Line Chart**, the system will use the `date_histogram` function from `Dashboard_Module_Functions` to group the data by time intervals on the `mainAxis` and might apply the `average` function to calculate average values on the `valueAxis`.
+    -   Together, `DASHBOARD_MODULE_FUNCTIONS` and `DASHBOARD_MODULE_TYPES` facilitate dynamic query building for the dashboard. The system uses the graph type from `DASHBOARD_MODULE_TYPES` to determine the structure of the query (e.g., aggregating data by categories or time intervals) and selects the appropriate function from `DASHBOARD_MODULE_FUNCTIONS` to process the data (e.g., calculating sums or averages).
+    -   For instance, if the user selects a **Line Chart**, the system will use the `date_histogram` function from `DASHBOARD_MODULE_FUNCTIONS` to group the data by time intervals on the `mainAxis` and might apply the `average` function to calculate average values on the `valueAxis`.
 
 
-### Example: Interaction Between `Dashboard_Module_Functions` and `dashboard_Module_Types`
+### Example: Interaction Between `DASHBOARD_MODULE_FUNCTIONS` and `DASHBOARD_MODULE_TYPES`
 
 Let's look at an example scenario to see how the two constants interact.
 
@@ -218,12 +218,12 @@ Let's look at an example scenario to see how the two constants interact.
 
 -   **Graph Type**: **Line Chart**
     
-    -   From `dashboard_Module_Types`, we know that a **Line Chart** uses `x` as the **mainAxis** (time-based) and `y` as the **valueAxis** (numeric values).
+    -   From `DASHBOARD_MODULE_TYPES`, we know that a **Line Chart** uses `x` as the **mainAxis** (time-based) and `y` as the **valueAxis** (numeric values).
     -   The `mainAxisFrequency` is `Single`, meaning only one field (such as a date field) can be used on the `x-axis`.
     -   The `valueAxisFrequency` is `Multiple`, meaning multiple metrics can be plotted on the `y-axis` (such as temperature, sales, etc.).
 -   **Selected Function**: `date_histogram`
     
-    -   From `Dashboard_Module_Functions`, the `date_histogram` function is valid for `date` data types and applies to the **mainAxis**. It requires a `field` (e.g., `timestamp`) and `fixed_interval` (e.g., `daily`).
+    -   From `DASHBOARD_MODULE_FUNCTIONS`, the `date_histogram` function is valid for `date` data types and applies to the **mainAxis**. It requires a `field` (e.g., `timestamp`) and `fixed_interval` (e.g., `daily`).
 -   **Selected Function**: `average`
     
     -   The `average` function, which operates on numeric data types (`integer`, `float`, `double`), applies to the **valueAxis**. This function would calculate the average value of a metric (e.g., temperature) for each time interval.
@@ -233,19 +233,19 @@ Let's look at an example scenario to see how the two constants interact.
 
 ### Key Points to Remember
 
--   **dashboard_Module_Types** defines the structure and configuration of the visualizations, including which axis is the **mainAxis** and which is the **valueAxis**.
--   **Dashboard_Module_Functions** defines the functions or operations that can be applied to these axes, ensuring compatibility with the data type and axis frequency.
+-   **DASHBOARD_MODULE_TYPES** defines the structure and configuration of the visualizations, including which axis is the **mainAxis** and which is the **valueAxis**.
+-   **DASHBOARD_MODULE_FUNCTIONS** defines the functions or operations that can be applied to these axes, ensuring compatibility with the data type and axis frequency.
 -   The two constants work together to build dynamic queries that process data correctly and display it in the appropriate visual format.
 
 ----------
 
-This relationship between `Dashboard_Module_Functions` and `dashboard_Module_Types` ensures flexibility in the dashboard design, allowing users to generate complex visualizations while ensuring that the correct data processing functions are applied based on the graph type and data structure.
+This relationship between `DASHBOARD_MODULE_FUNCTIONS` and `DASHBOARD_MODULE_TYPES` ensures flexibility in the dashboard design, allowing users to generate complex visualizations while ensuring that the correct data processing functions are applied based on the graph type and data structure.
 
 ----------
 
 
 
-## More About `Dashboard_Module_Functions` and `options`
+## More About `DASHBOARD_MODULE_FUNCTIONS` and `options`
 
 Each aggregation function (e.g., `top_values`, `sum`, `avg`, `date_histogram`) specifies its required options, which must be present for the function to execute, and its optional options, which enhance or modify the function but are not mandatory.
 
@@ -253,7 +253,7 @@ Each aggregation function (e.g., `top_values`, `sum`, `avg`, `date_histogram`) s
 
 ### **Structure Breakdown:**
 
-Each function in `dashboard_Module_Functions` is represented by an object with the following structure:
+Each function in `DASHBOARD_MODULE_FUNCTIONS` is represented by an object with the following structure:
 
 ```json
 {
@@ -297,7 +297,7 @@ Each aggregation function (like `top_values`, `sum`, or `date_histogram`) is def
 
 
 ```js
-const dashboard_Module_Functions = {
+const DASHBOARD_MODULE_FUNCTIONS = {
     top_values: {
         options: {
             required: {
@@ -333,7 +333,7 @@ const dashboard_Module_Functions = {
 #### **Example: `date_histogram` Function**
 
 ```js
-const dashboard_Module_Functions = {
+const DASHBOARD_MODULE_FUNCTIONS = {
     date_histogram: {
         options: {
             required: {
@@ -482,11 +482,11 @@ dashboard_Module_Function_Options : [
 1.  **`queryType`:**
     
     -   **Allowed Values**: `["aggregation", "search", "count"]`
-    -   This option determines the type of query being performed. For aggregation functions, this must always be set to `"aggregation"`. The other possible values, `"search"` and `"count"`, may be used in different contexts but are not applicable for most aggregation functions defined in `dashboard_Module_Functions`.
+    -   This option determines the type of query being performed. For aggregation functions, this must always be set to `"aggregation"`. The other possible values, `"search"` and `"count"`, may be used in different contexts but are not applicable for most aggregation functions defined in `DASHBOARD_MODULE_FUNCTIONS`.
 2.  **`aggregationType`:**
     
     -   **Allowed Values**: Function-specific (e.g., `["terms"]`, `["date_histogram"]`, `["sum"]`, etc.)
-    -   This option specifies the type of aggregation being performed. Each function in `dashboard_Module_Functions` requires a specific `aggregationType`. For example, the `terms` function requires `aggregationType: ["terms"]`, while the `date_histogram` function requires `aggregationType: ["date_histogram"]`.
+    -   This option specifies the type of aggregation being performed. Each function in `DASHBOARD_MODULE_FUNCTIONS` requires a specific `aggregationType`. For example, the `terms` function requires `aggregationType: ["terms"]`, while the `date_histogram` function requires `aggregationType: ["date_histogram"]`.
 
 3.  **`aggregationField`:**
     
@@ -534,7 +534,7 @@ dashboard_Module_Function_Options : [
 
 ### **Conclusion:**
 
-The `dashboard_Module_Functions` structure is designed to provide clarity and enforce the correct configuration of aggregation queries in a dynamic dashboard. By specifying required and optional fields for each function, it ensures that the queries are both flexible and robust, allowing for customization while maintaining the integrity of the query logic.
+The `DASHBOARD_MODULE_FUNCTIONS` structure is designed to provide clarity and enforce the correct configuration of aggregation queries in a dynamic dashboard. By specifying required and optional fields for each function, it ensures that the queries are both flexible and robust, allowing for customization while maintaining the integrity of the query logic.
 
 This structure helps developers and AI models understand the expected inputs for each aggregation type, reducing the likelihood of errors and improving the efficiency of the querying process.
 
