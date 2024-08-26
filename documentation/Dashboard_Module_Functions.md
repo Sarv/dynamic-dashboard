@@ -459,12 +459,12 @@ To ensure that the options passed to each function are valid, two validation ste
 ----------
 
 ### **Allowed Options Explanation:**
-Allowed options ensure that certain fields follow strict predefined values that the aggregation function can recognize and process correctly. The allowed list for specific options like `queryType` and `aggregationType` is stored in the `dashboard_Module_Function_Options` constant.
+Allowed options ensure that certain fields follow strict predefined values that the aggregation function can recognize and process correctly. The allowed list for specific options like `queryType` and `aggregationType` is stored in the `DASHBOARD_MODULE_FUNCTION_OPTIONS` constant.
 
 ```js
 // File Path: lib/es-config.js
 
-dashboard_Module_Function_Options : [
+DASHBOARD_MODULE_FUNCTION_OPTIONS: [
         "queryType",
         "aggregationType",
         "aggregationField",

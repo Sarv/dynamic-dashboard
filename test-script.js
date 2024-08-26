@@ -20,7 +20,7 @@ const { validateDashboardModuleOptions, validateFunctionOptionMapping } = requir
 // Example usage
 const options = {
     queryType: "aggregation",
-    aggregationType: "sum",
+    aggregationType: "terms",
     aggregationField: "status",
     size: 10,
     min_doc_count: 1,
@@ -29,7 +29,7 @@ const options = {
     
 };
 
-const functionType = "sum";
+const functionType = "top_values";
 
 // Call the validation function
     const validationResult = validateDashboardModuleOptions(options);
