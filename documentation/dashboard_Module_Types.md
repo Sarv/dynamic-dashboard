@@ -287,7 +287,7 @@ This table was created during our discussion to summarize the axis configuration
 | **Donut Chart**             | x                   | Multiple                 | y                        | Single                    | main            |
 | **Metric**                  | None                | N/A                      | y                        | Single                    | value           |
 | **Data Table**              | x                   | Multiple                 | y                        | Multiple                  | N/A             | 
-|
+|||||||
 
 ----------
 
