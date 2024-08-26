@@ -1,5 +1,5 @@
 // Import the validation function from dynamic-dashboard-functions.js
-const { validateDashboardModuleOptions, validateFunctionOptionMapping } = require('./lib/dynamic-dashboard-functions');
+const { validateDashboardModuleOptions, validateFunctionOptionMapping, validateModuleFunction, validateDataView } = require('./lib/dynamic-dashboard-functions');
 
 // Example options to validate
 
@@ -25,27 +25,47 @@ const options = {
     size: 10,
     min_doc_count: 1,
     terms_size: 5,
-    missing: "Unknown"
+    missing: "blank"
     
 };
 
 const functionType = "top_values";
 
 // Call the validation function
-    const validationResult = validateDashboardModuleOptions(options);
+    const validFunc = validateModuleFunction(functionType);
+    
+    if (validFunc.errorCode)
+    {
+        console.error(`Error: ${validFunc.errorCode}, Message: ${validFunc.message}`);
+    }   
+    else
+    {
+        const validationResult = validateDashboardModuleOptions(options);
+            
 
+        // Check and handle the validation result
+        if (validationResult.errorCode) {
+            console.error(`Error: ${validationResult.errorCode}, Message: ${validationResult.message}`);
+        } else {
+            // console.log("Validation passed");
+            // Now, validate function-specific option mapping
+            const result = validateFunctionOptionMapping(options, functionType);
+            if (result.errorCode) {
+                console.error(`Error: ${result.errorCode}, Message: ${result.message}`);
+            } else {
+                console.log("Validation passed");
+            }
+        }
+    } 
     
 
-// Check and handle the validation result
-if (!validationResult.valid) {
-    console.error("Validation failed with errors:", validationResult.errors);
+
+// Example Usage:
+const dataViewToCheck = 'stock_market'; // Example input
+const vb = validateDataView(dataViewToCheck);
+
+if (vb.errorCode) {
+  console.error(`Error: ${vb.errorCode}, Message: ${vb.message}`);
 } else {
-    // console.log("Validation passed");
-    // Now, validate function-specific option mapping
-    const result = validateFunctionOptionMapping(options, functionType);
-    if (!result.valid) {
-        console.error("Validation errors:", result.errors);
-    } else {
-        console.log("Validation passed");
-    }
+  console.log(vb.message);
 }
