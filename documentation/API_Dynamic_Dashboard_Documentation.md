@@ -10,6 +10,9 @@
 7. [Utility Functions](#utility-functions)
 8. [Validation](#validation)
 9. [Error Handling](#error-handling)
+10. [Key Design Decisions](#key-design-decisions)
+11. [Project-Specific Patterns and Rules](#project-specific-patterns-and-rules)
+12. [Future Enhancements](#future-enhancements)
 
 ## Project Overview
 
@@ -316,4 +319,66 @@ The function ensures that appropriate status codes and error messages are sent b
 
 ---
 
+## Key Design Decisions
+
+1. **RESTful API Structure**: The API follows RESTful principles for consistency and ease of use.
+
+2. **Field Masking**: Implemented to provide a layer of abstraction between the database and client, allowing for future database changes without affecting the client-side code.
+
+3. **Soft Delete**: Chosen over hard delete to allow for data recovery and maintain historical records.
+
+4. **Centralized Error Handling**: Implemented to ensure consistent error responses across all endpoints.
+
+5. **Modular File Structure**: The project is organized into separate files for routes, validations, error handling, and constants to improve maintainability and scalability.
+
+6. **Elasticsearch as Database**: Selected for its powerful search and aggregation capabilities, which are beneficial for dashboard functionalities.
+
+## Project-Specific Patterns and Rules
+
+1. **Naming Conventions**: 
+   - Use camelCase for variable and function names
+   - Use PascalCase for class names
+   - Use UPPER_SNAKE_CASE for constants
+
+2. **API Response Format**:
+   All API responses should follow this structure:
+   ```json
+   {
+     "message": "Operation result message",
+     "data": {}, // Optional, contains the response data
+     "error": {} // Optional, contains error details if applicable
+   }
+   ```
+
+3. **Module Structure**:
+   Each dashboard module should have a unique `moduleId` and contain `positionX`, `positionY`, `moduleWidth`, and `moduleHeight` properties.
+
+4. **Global Filters**:
+   Global filters are applied at the dashboard level and affect all modules within the dashboard.
+
+5. **Validation**:
+   All input data must be validated before processing. Use the validation functions in `validations.js`.
+
+6. **Error Handling**:
+   Use the `handleApiError` function from `errorHandler.js` for consistent error responses.
+
+## Future Enhancements
+
+1. **User Authentication**: Implement user authentication and authorization for secure access to dashboards.
+
+2. **Real-time Updates**: Integrate WebSocket functionality for real-time dashboard updates.
+
+3. **Dashboard Sharing**: Implement features to allow users to share dashboards with others.
+
+4. **Advanced Filtering**: Enhance the global filter functionality with more complex filtering options.
+
+5. **Dashboard Templates**: Create a system for dashboard templates to allow quick creation of common dashboard types.
+
+6. **Data Source Integration**: Implement functionality to connect dashboards to various data sources.
+
+7. **Export/Import**: Add features to export and import dashboard configurations.
+
+---
+
 This documentation provides a comprehensive overview of the Dynamic Dashboard API project. It covers the file structure, key concepts, constants, error codes, API endpoints, utility functions, validation, and error handling. Use this as a reference for understanding and working with the API.
+
