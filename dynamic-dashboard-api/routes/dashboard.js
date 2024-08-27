@@ -102,7 +102,7 @@ router.post('/update', async (req, res) => {
             res.json({
               message: result.result === 'updated' ? 'Dashboard updated successfully' : 'No changes were made to the dashboard',
               id: id
-              //dashboard: maskedUpdatedDoc
+              dashboard: maskedUpdatedDoc
             });
           } else {
             console.error('Unexpected Elasticsearch response structure:', updatedDoc);
