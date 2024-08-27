@@ -106,10 +106,10 @@ function validateModules(modules) {
 }
 
 function validateDashboard(dashboard) {
-    console.log('Input to validateDashboard:', JSON.stringify(dashboard, null, 2));
+    // console.log('Input to validateDashboard:', JSON.stringify(dashboard, null, 2));
     // Remove this line as the conversion has already been done
     // const dbDashboard = convertToDbFields(dashboard);
-    console.log('Dashboard in validateDashboard:', JSON.stringify(dashboard, null, 2));
+    // console.log('Dashboard in validateDashboard:', JSON.stringify(dashboard, null, 2));
     const validations = [
       validateTitle(dashboard.title),
       validateStatus(dashboard.status),
@@ -122,7 +122,7 @@ function validateDashboard(dashboard) {
       .filter(validation => !validation.isValid)
       .map(validation => validation.error);
   
-    console.log('Validation errors:', JSON.stringify(errors, null, 2));
+    // console.log('Validation errors:', JSON.stringify(errors, null, 2));
     return errors.length > 0 ? { isValid: false, errors } : { isValid: true };
   }
 

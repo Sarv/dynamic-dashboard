@@ -74,8 +74,8 @@ const DASHBOARD_STATUS = {
     Object.entries(FIELD_MAPPING_DASHBOARD).map(([key, value]) => [value, key])
   );
   
-  console.log('FIELD_MAPPING:', FIELD_MAPPING_DASHBOARD);
-  console.log('REVERSE_FIELD_MAPPING_DASHBOARD:', REVERSE_FIELD_MAPPING_DASHBOARD);
+  // console.log('FIELD_MAPPING:', FIELD_MAPPING_DASHBOARD);
+  // console.log('REVERSE_FIELD_MAPPING_DASHBOARD:', REVERSE_FIELD_MAPPING_DASHBOARD);
   
   module.exports = {
     DASHBOARD_STATUS,

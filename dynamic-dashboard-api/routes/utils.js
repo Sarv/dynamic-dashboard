@@ -4,7 +4,7 @@
 const { FIELD_MAPPING_DASHBOARD, REVERSE_FIELD_MAPPING_DASHBOARD, ALLOWED_FIELDS_IN_LIST_DASHBOARD_MODULE } = require('./constants');
 
 function convertToDbFields(data) {
-  console.log('Input to convertToDbFields:', JSON.stringify(data, null, 2));
+  // console.log('Input to convertToDbFields:', JSON.stringify(data, null, 2));
   const result = {};
   for (const [key, value] of Object.entries(data)) {
     if (REVERSE_FIELD_MAPPING_DASHBOARD[key]) {
@@ -20,7 +20,7 @@ function convertToDbFields(data) {
       result[key] = value;
     }
   }
-  console.log('Output from convertToDbFields:', JSON.stringify(result, null, 2));
+//   console.log('Output from convertToDbFields:', JSON.stringify(result, null, 2));
   return result;
 }
 

@@ -85,7 +85,7 @@ router.post('/update', async (req, res) => {
           refresh: true
         });
   
-        console.log('Elasticsearch update response:', JSON.stringify(result, null, 2));
+        // console.log('Elasticsearch update response:', JSON.stringify(result, null, 2));
   
         if (result.result === 'updated' || result.result === 'noop') {
           // Fetch the updated document
@@ -94,7 +94,7 @@ router.post('/update', async (req, res) => {
             id: id
           });
   
-          console.log('Elasticsearch get response:', JSON.stringify(updatedDoc, null, 2));
+          // console.log('Elasticsearch get response:', JSON.stringify(updatedDoc, null, 2));
   
           if (updatedDoc && updatedDoc._source) {
             const maskedUpdatedDoc = convertToMaskedFields(updatedDoc._source);
@@ -170,7 +170,7 @@ router.get('/list/:id?', async (req, res) => {
         }
       });
   
-      console.log('Elasticsearch response:', JSON.stringify(result, null, 2));
+      // console.log('Elasticsearch response:', JSON.stringify(result, null, 2));
   
       if (!result.hits || !Array.isArray(result.hits.hits)) {
         throw new Error('Unexpected response structure from Elasticsearch');
@@ -230,7 +230,7 @@ router.post('/delete', async (req, res) => {
         }
       });
 
-      console.log('Elasticsearch delete response:', JSON.stringify(result, null, 2));
+      // console.log('Elasticsearch delete response:', JSON.stringify(result, null, 2));
 
       if (result.result === 'updated') {
         res.json({
