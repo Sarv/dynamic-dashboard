@@ -1,4 +1,6 @@
-These instructions reflect good practices and can be valuable for future projects:
+# API Development Best Practices
+
+Here's a list of important instructions you can give throughout any project. These instructions reflect good practices and can be valuable for future projects:
 
 1. Use different endpoints for create, update, list, and delete functionality, instead of using POST, GET, DELETE, and PUT methods.
 
@@ -47,5 +49,3 @@ These instructions reflect good practices and can be valuable for future project
 23. Use environment variables for configuration (like Elasticsearch URL).
 
 24. Create a Postman collection for easy API testing and sharing.
-
-These instructions demonstrate a focus on code organization, maintainability, security, and user-friendliness. They can serve as a valuable checklist for setting up and structuring future projects, especially APIs.
