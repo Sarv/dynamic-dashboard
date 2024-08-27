@@ -23,11 +23,13 @@ const DASHBOARD_STATUS = {
     DASHBOARD_NOT_FOUND: { code: 'DASHBOARD_NOT_FOUND', message: 'Dashboard not found' },
     ELASTICSEARCH_ERROR: { code: 'ELASTICSEARCH_ERROR', message: 'Error interacting with Elasticsearch' },
     INVALID_MODULE_FIELD: { code: 'INVALID_MODULE_FIELD', message: 'Invalid field in module' },
-    INVALID_UPDATE_FIELD: { code: 'INVALID_UPDATE_FIELD', message: 'Attempted to update a field that is not allowed to be updated' }
+    INVALID_UPDATE_FIELD: { code: 'INVALID_UPDATE_FIELD', message: 'Attempted to update a field that is not allowed to be updated' },
+    MODULE_NOT_FOUND: { code: 'MODULE_NOT_FOUND', message: 'Dashboard module not found' }
   };
   
   const ELASTICSEARCH_INDICES = {
-    DYNAMIC_DASHBOARDS: 'dynamic_dashboards'
+    DYNAMIC_DASHBOARDS: 'dynamic_dashboards',
+    DASHBOARD_MODULES: 'dashboard_modules'
   };
   
   const UPDATABLE_FIELDS = [

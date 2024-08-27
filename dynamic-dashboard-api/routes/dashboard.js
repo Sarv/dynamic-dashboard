@@ -131,6 +131,96 @@ router.post('/update', async (req, res) => {
 // List Dashboards
 router.get('/list/:id?', async (req, res) => {
     try {
+        const { id } = req.params;
+        const { limit = 10, searchAfter } = req.query;
+
+        let query;
+        if (id) {
+            const idValidation = validateId(id);
+            if (!idValidation.isValid) {
+                throw {
+                    name: 'ValidationError',
+                    ...idValidation.error
+                };
+            }
+            query = {
+                bool: {
+                    must: [
+                        { term: { _id: id } },
+                        { bool: { must_not: [{ term: { status: DASHBOARD_STATUS.DELETED } }] } }
+                    ]
+                }
+            };
+        } else {
+            query = {
+                bool: {
+                    must_not: [
+                        { term: { status: DASHBOARD_STATUS.DELETED } }
+                    ]
+                }
+            };
+        }
+
+        const searchParams = {
+            index: ELASTICSEARCH_INDICES.DYNAMIC_DASHBOARDS,
+            body: {
+                query: query,
+                sort: [
+                    { create_time: 'desc' },
+                    { _id: 'desc' }  // Secondary sort on _id to ensure consistent ordering
+                ],
+                ...(id ? {} : { size: parseInt(limit) })
+            }
+        };
+
+        // Add search_after if provided
+        if (!id && searchAfter) {
+            const [timestamp, lastId] = searchAfter.split('_');
+            searchParams.body.search_after = [parseInt(timestamp), lastId];
+        }
+
+        const result = await client.search(searchParams);
+
+        if (!result.hits || !Array.isArray(result.hits.hits)) {
+            throw new Error('Unexpected response structure from Elasticsearch');
+        }
+
+        const dashboards = result.hits.hits.map(hit => {
+            const filteredData = filterFields(hit._source, ALLOWED_FIELDS_IN_LIST_DASHBOARD);
+            const maskedData = convertToMaskedFields(filteredData);
+            return {
+                id: hit._id,
+                ...maskedData
+            };
+        });
+
+        if (id) {
+            if (dashboards.length === 0) {
+                return res.status(404).json({
+                    errorCode: ERROR_CODES.DASHBOARD_NOT_FOUND.code,
+                    message: ERROR_CODES.DASHBOARD_NOT_FOUND.message
+                });
+            }
+            res.json(dashboards[0]);
+        } else {
+            const totalDashboards = result.hits.total.value;
+            const lastHit = result.hits.hits[result.hits.hits.length - 1];
+            const nextSearchAfter = lastHit ? `${lastHit._source.create_time}_${lastHit._id}` : null;
+
+            res.json({
+                dashboards,
+                totalDashboards,
+                nextSearchAfter
+            });
+        }
+    } catch (error) {
+        console.error('Error listing dashboards:', error);
+        handleApiError(res, error);
+    }
+});
+
+router.get('/list_OLD/:id?', async (req, res) => {
+    try {
       const { id } = req.params;
   
       let query;

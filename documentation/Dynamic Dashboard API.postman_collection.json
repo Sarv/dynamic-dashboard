@@ -72,7 +72,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/api/dashboard/list",
+					"raw": "{{baseUrl}}/api/dashboard/list?limit=10&searchAfter={{searchAfter}}",
 					"host": [
 						"{{baseUrl}}"
 					],
@@ -80,30 +80,19 @@
 						"api",
 						"dashboard",
 						"list"
-					]
-				},
-				"description": "Retrieves a list of all non-deleted dashboards.\n\n**Response:**\n\nAn array of dashboard objects. Each object will include only the fields specified in ALLOWED_FIELDS_IN_LIST_DASHBOARD.\n\n```json\n[\n    {\n        \"id\": \"dashboard-id-1\",\n        \"dashboardTitle\": \"Sales Overview\",\n        \"dashboardStatus\": 1,\n        \"globalFilter\": \"year:2023\",\n        \"createdAt\": 1621234567890,\n        \"updatedAt\": 1621234567890\n    },\n    {\n        \"id\": \"dashboard-id-2\",\n        \"dashboardTitle\": \"Marketing Campaign Tracker\",\n        \"dashboardStatus\": 1,\n        \"globalFilter\": \"campaign:summer2023\",\n        \"createdAt\": 1621234567891,\n        \"updatedAt\": 1621234567891\n    }\n]\n```\n\n**Possible Error Codes:**\n\n| Error Code | Description |\n|------------|-------------|\n| ELASTICSEARCH_ERROR | Error interacting with Elasticsearch |\n\n**Example Use Cases:**\n\n1. Displaying a list of all available dashboards:\n   - Use this endpoint to populate a dashboard selection screen or dropdown.\n   - Show dashboard titles, creation dates, and status in a table or list view.\n\n2. Filtering dashboards:\n   - Implement client-side filtering based on dashboard title, status, or creation date.\n   - Example: Show only active dashboards created in the last month.\n\n3. Sorting dashboards:\n   - Implement client-side sorting based on various fields like title, creation date, or last update date.\n   - Example: Sort dashboards by most recently updated.\n\n**Frontend Considerations:**\n- Implement pagination if the number of dashboards is large.\n- Provide sorting options for different fields (e.g., title, creation date, status).\n- Implement a search functionality to filter dashboards based on title or other criteria.\n- Display dashboard status using icons or color-coding.\n- Show a loading indicator while fetching the dashboard list.\n- Handle empty states when no dashboards are available.\n- Provide options to navigate to individual dashboard views or edit screens."
-			},
-			"response": []
-		},
-		{
-			"name": "Get Specific Dashboard",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseUrl}}/api/dashboard/list/{{dashboardId}}",
-					"host": [
-						"{{baseUrl}}"
 					],
-					"path": [
-						"api",
-						"dashboard",
-						"list",
-						"{{dashboardId}}"
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "searchAfter",
+							"value": "{{searchAfter}}"
+						}
 					]
 				},
-				"description": "Retrieves details of a specific dashboard.\n\n**Parameters:**\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| dashboardId | string | Yes | The ID of the dashboard to retrieve |\n\n**Response:**\n\nA dashboard object including only the fields specified in ALLOWED_FIELDS_IN_LIST_DASHBOARD.\n\n```json\n{\n    \"id\": \"dashboard-id-1\",\n    \"dashboardTitle\": \"Sales Overview\",\n    \"dashboardStatus\": 1,\n    \"globalFilter\": \"year:2023\",\n    \"createdAt\": 1621234567890,\n    \"updatedAt\": 1621234567890,\n    \"dashboardModules\": [\n        {\n            \"moduleId\": \"sales-chart\",\n            \"positionX\": 0,\n            \"positionY\": 0,\n            \"moduleWidth\": 6,\n            \"moduleHeight\": 4\n        },\n        {\n            \"moduleId\": \"revenue-meter\",\n            \"positionX\": 6,\n            \"positionY\": 0,\n            \"moduleWidth\": 3,\n            \"moduleHeight\": 2\n        }\n    ]\n}\n```\n\n**Possible Error Codes:**\n\n| Error Code | Description |\n|------------|-------------|\n| INVALID_ID | Invalid dashboard ID |\n| DASHBOARD_NOT_FOUND | Dashboard not found |\n| ELASTICSEARCH_ERROR | Error interacting with Elasticsearch |\n\n**Example Use Cases:**\n\n1. Loading a specific dashboard for viewing or editing:\n   - Use this endpoint to fetch all necessary details when a user selects a dashboard to view or edit.\n   - Populate the dashboard layout with modules based on the returned data.\n\n2. Checking dashboard status:\n   - Verify if a dashboard is active before loading it for a user.\n\n3. Retrieving dashboard metadata:\n   - Fetch creation and update times for displaying dashboard information.\n\n**Frontend Considerations:**\n- Implement error handling for cases where the dashboard is not found or the ID is invalid.\n- Use a loading indicator while fetching dashboard details.\n- Dynamically create the dashboard layout based on the returned module information.\n- Display dashboard metadata (creation date, last update) in an info section.\n- Provide options to edit the dashboard or go back to the dashboard list.\n- Implement module-specific logic based on the moduleId (e.g., load appropriate charts or data for each module)."
+				"description": "Retrieves a list of all non-deleted dashboards using search after pagination.\n\n**Query Parameters:**\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| limit | number | No | The number of dashboards to return (default: 10) |\n| searchAfter | string | No | The search after value for pagination |\n\n**Response:**\n\n```json\n{\n    \"dashboards\": [\n        {\n            \"id\": \"dashboard-id-1\",\n            \"dashboardTitle\": \"Sales Overview\",\n            \"dashboardStatus\": 1,\n            \"globalFilter\": \"year:2023\",\n            \"createdAt\": 1621234567890,\n            \"updatedAt\": 1621234567890\n        },\n        {\n            \"id\": \"dashboard-id-2\",\n            \"dashboardTitle\": \"Marketing Campaign Tracker\",\n            \"dashboardStatus\": 1,\n            \"globalFilter\": \"campaign:summer2023\",\n            \"createdAt\": 1621234567891,\n            \"updatedAt\": 1621234567891\n        }\n    ],\n    \"totalDashboards\": 50,\n    \"nextSearchAfter\": \"1621234567891_dashboard-id-2\"\n}\n```\n\n**Possible Error Codes:**\n\n| Error Code | Description |\n|------------|-------------|\n| ELASTICSEARCH_ERROR | Error interacting with Elasticsearch |\n\n**Example Use Cases:**\n\n1. Initial request for dashboard list:\n   - Use this endpoint without the searchAfter parameter to get the first page of results.\n   - Example: GET {{baseUrl}}/api/dashboard/list?limit=10\n\n2. Subsequent requests for pagination:\n   - Use the nextSearchAfter value from the previous response as the searchAfter parameter.\n   - Example: GET {{baseUrl}}/api/dashboard/list?limit=10&searchAfter=1621234567891_dashboard-id-2\n\n3. Adjusting the number of results:\n   - Modify the limit parameter to change the number of dashboards returned per request.\n   - Example: GET {{baseUrl}}/api/dashboard/list?limit=20\n\n**Frontend Considerations:**\n- Implement infinite scrolling or a 'Load More' button using the nextSearchAfter value.\n- Store the nextSearchAfter value to use for the next page request.\n- Display a loading indicator while fetching more dashboards.\n- Handle cases where there are no more dashboards to load (nextSearchAfter is null).\n- Provide sorting options for different fields (e.g., title, creation date, status).\n- Implement a search functionality to filter dashboards based on title or other criteria.\n- Display dashboard status using icons or color-coding.\n- Handle empty states when no dashboards are available.\n- Provide options to navigate to individual dashboard views or edit screens.\n\n**Notes on Search After Pagination:**\n- The searchAfter parameter is based on the sorting of results (in this case, by create_time in descending order).\n- Each request will return a fixed number of results (determined by the limit parameter).\n- The nextSearchAfter value in the response should be used for the next page request.\n- This method allows for efficient deep pagination without the limitations of offset-based pagination.\n- You cannot jump to a specific page number with this method; pagination happens by moving forward through the results.\n\n**Handling ID-based Requests:**\nTo fetch a specific dashboard by ID, use the same endpoint with the ID in the path:\n\nGET {{baseUrl}}/api/dashboard/list/{{dashboardId}}\n\nThis will return a single dashboard object if found, or a 404 error if not found."
 			},
 			"response": []
 		},
