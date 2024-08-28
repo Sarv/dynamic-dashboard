@@ -1,5 +1,5 @@
 // Import the validation function from dynamic-dashboard-functions.js
-const { validateDashboardModuleOptions, validateFunctionOptionMapping, validateModuleFunction, validateDataView } = require('./lib/dynamic-dashboard-functions');
+const { validateDashboardModuleOptions, validateFunctionOptionMapping, validateModuleFunction, validateDataView } = require('./dynamic-dashboard-api/lib/dynamic-dashboard-functions');
 
 // Example options to validate
 

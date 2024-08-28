@@ -32,7 +32,7 @@ function getIndexMapping(indexName) {
         }
       };
 
-    
+  
       
       case 'dashboard_modules':
         return {
