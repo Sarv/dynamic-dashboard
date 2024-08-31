@@ -3,7 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const dashboardRoutes = require('./routes/dashboard');
-const moduleRoutes = require('./routes/module/module_routes');
+const moduleRoutes = require('./routes/module/module_main');
 require('dotenv').config();
 
 const app = express();

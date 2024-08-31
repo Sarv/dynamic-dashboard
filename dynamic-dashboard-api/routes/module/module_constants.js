@@ -490,7 +490,41 @@ module.exports = {
         "terms_size",
         "missing",
         "color"
-    ]
+    ],
+
+
+    ERROR_CODES_MODULE : {
+        DV_DATA_VIEW_NOT_FOUND: { code: 'DV_DATA_VIEW_NOT_FOUND', message: 'The specified data view does not exist in the DATA_VIEW constant.' },
+        DV_MAPPED_INDEX_NOT_FOUND: { code: 'DV_MAPPED_INDEX_NOT_FOUND', message: 'The mappedIndex for the specified data view does not exist in DATA_VIEW.' },
+        DV_ESINDEX_KEY_NOT_FOUND: { code: 'DV_ESINDEX_KEY_NOT_FOUND', message: 'The mappedIndex key for the data view does not exist in the ES_INDEX_MAP.' },
+        DV_ESMAPPING_FILE_NOT_FOUND: { code: 'DV_ESMAPPING_FILE_NOT_FOUND', message: 'The mappingFile for the mappedIndex key in ES_INDEX_MAP does not exist.' },
+        INVALID_MODULE_TYPE: { code: 'INVALID_MODULE_TYPE', message: 'The provided module type is invalid or not found in DASHBOARD_MODULE_TYPES.' },
+        INVALID_MODULE_FUNCTION: { code: 'INVALID_MODULE_FUNCTION', message: 'The provided module function is invalid or not found in DASHBOARD_MODULE_FUNCTIONS.' },
+        EMPTY_OPTIONS: { code: 'EMPTY_OPTIONS', message: 'The options parameter is empty or missing.' },
+        INVALID_OPTION: { code: 'INVALID_OPTION', message: 'The provided option key is not valid according to DASHBOARD_MODULE_FUNCTION_OPTIONS.' },
+        INVALID_QUERY_TYPE: { code: 'INVALID_QUERY_TYPE', message: 'The queryType provided is invalid (must be one of "search", "aggregation", "count").' },
+        MISSING_QUERY_TYPE: { code: 'MISSING_QUERY_TYPE', message: 'The queryType field is required but missing in the options.' },
+        INVALID_AGGREGATION_TYPE: { code: 'INVALID_AGGREGATION_TYPE', message: 'The aggregationType provided is invalid for the queryType "aggregation".' },
+        MISSING_AGGREGATION_TYPE: { code: 'MISSING_AGGREGATION_TYPE', message: 'The aggregationType field is required when queryType is "aggregation", but it\'s missing.' },
+        MISSING_AGGREGATION_FIELD: { code: 'MISSING_AGGREGATION_FIELD', message: 'The aggregationField is required when aggregationType is set, but it\'s missing.' },
+        INVALID_TIMEZONE_FORMAT: { code: 'INVALID_TIMEZONE_FORMAT', message: 'The timeZone format is invalid (should be in the format ±HH:mm).' },
+        INVALID_FIXED_INTERVAL: { code: 'INVALID_FIXED_INTERVAL', message: 'The fixed_interval value is invalid (should be in a valid time unit format, e.g., 1d, 5m, 2h).' },
+        INVALID_SIZE: { code: 'INVALID_SIZE', message: 'The size field is provided but is not a valid number.' },
+        INVALID_INTERVAL: { code: 'INVALID_INTERVAL', message: 'The interval field is provided but is not a valid number (relevant when aggregationType is histogram).' },
+        INVALID_MIN_DOC_COUNT: { code: 'INVALID_MIN_DOC_COUNT', message: 'The min_doc_count field is provided but is not a valid number.' },
+        INVALID_TERMS_SIZE: { code: 'INVALID_TERMS_SIZE', message: 'The terms_size field is provided but is not a valid number.' },
+        INVALID_OPTION_MISSING: { code: 'INVALID_OPTION_MISSING', message: 'The missing field is provided but is not a valid string.' },
+        MISSING_REQUIRED_OPTION: { code: 'MISSING_REQUIRED_OPTION', message: 'A required option is missing in the provided options.' },
+        INVALID_REQUIRED_OPTION_VALUE: { code: 'INVALID_REQUIRED_OPTION_VALUE', message: 'A required option has an invalid value for the specified function.' },
+        UNMAPPED_OPTION_FUNCTION: { code: 'UNMAPPED_OPTION_FUNCTION', message: 'The provided option is not mapped to the function type in either required or optional properties.' },
+        FUNCTION_OPTIONS_NOT_FOUND: { code: 'FUNCTION_OPTIONS_NOT_FOUND', message: 'The function type provided does not have any mapped options.' },
+        MISSING_OR_INVALID_MAIN_AXIS: { code: 'MISSING_OR_INVALID_MAIN_AXIS', message: 'The main_axis field is required, must be an array, and cannot be empty.' },
+        MISSING_OR_INVALID_VALUE_AXIS: { code: 'MISSING_OR_INVALID_VALUE_AXIS', message: 'The value_axis field is required, must be an array, and cannot be empty.' },
+        INVALID_MAIN_AXIS_SIZE: { code: 'INVALID_MAIN_AXIS_SIZE', message: 'The main_axis field must contain exactly one object if Single frequency is specified.' },
+        INVALID_VALUE_AXIS_SIZE: { code: 'INVALID_VALUE_AXIS_SIZE', message: 'The value_axis field must contain exactly one object if Single frequency is specified.' },
+        INVALID_MODULE_FUNCTION_AXIS: { code: 'INVALID_MODULE_FUNCTION_AXIS', message: 'The specified functionType is not valid for the axis it is associated with.' },
+        MODULE_FUNCTION_CONFIG_MISSING: { code: 'MODULE_FUNCTION_CONFIG_MISSING', message: 'The configuration for the specified functionType is incomplete or missing.' }
+    }
   
 
 };

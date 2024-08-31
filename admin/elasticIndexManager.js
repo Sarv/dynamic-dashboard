@@ -7,7 +7,8 @@ const client = new Client({ node: 'http://localhost:9200' });
 
 // Function to get the dynamic mapping based on the index name
 function getIndexMapping(indexName) {
-  switch (indexName) {
+  switch (indexName) 
+  {
     case 'dynamic_dashboards':
       return {
         mappings: {
@@ -36,60 +37,116 @@ function getIndexMapping(indexName) {
       
       case 'dashboard_modules':
         return {
-          mappings: {
-            properties: {
+          mappings: 
+          {
+            properties: 
+            {
               title: { type: 'text' },
               userid: { type: 'keyword' },
               filter_s: { type: 'text' },
-              data_view: { type: 'keyword' },
-              module_type: { type: 'keyword' },
+              data_view: { type: 'keyword' }, // valid value from DATA_VIEW
+              module_type: { type: 'keyword' }, // valid value from  key in DASHBOARD_MODULE_TYPES in es-config.js, like, bar_horizontal, bar_vertical_percentage, etc.
               dashboard_id: { type: 'keyword' },
               create_time: { type: 'date', format: 'epoch_millis' },
-              main_axis: {
+              main_axis: 
+              { // array of nested object
                 type: 'nested',
-                properties: {
-                  function_key: { type: 'keyword' },
-                  field_name: { type: 'keyword' },
-                  options: {
-                    type: 'nested',
-                    properties: {
-                      option_name: { type: 'keyword' },
-                      option_value: { type: 'keyword' }
-                    }
+                properties: 
+                {
+                  
+                  function_key: { type: 'keyword' }, // valid value from  key in DASHBOARD_MODULE_FUNCTIONS in es-config.js, like, date_histogram, sum, avg, etc.
+
+                  // all the below fields are mapped with valid values of DASHBOARD_MODULE_FUNCTION_OPTIONS
+                  
+                  aggregationField :  { type: 'keyword' }, // DASHBOARD_MODULE_FUNCTION_OPTIONS -> aggregationField
+                  timeZone :  { type: 'keyword' },  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> timeZone
+                  fixed_interval :  { type: 'keyword' },  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> fixed_interval
+                  size : { type: 'integer' },  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> size
+                  interval : { type: 'integer' },  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> interval
+                  min_doc_count : { type: 'integer' },  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> min_doc_count
+                  terms_size : { type: 'integer' },  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> terms_size
+                  missing : { type: 'keyword' },  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> missing
+                  color : { type: 'keyword' }  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> color
+
                   }
-                }
               },
-              value_axis: {
-                type: 'nested', 
-                properties: {
-                  function_key: { type: 'keyword' },
-                  field_name: { type: 'keyword' },
-                  options: {
-                    type: 'nested',
-                    properties: {
-                      option_name: { type: 'keyword' },
-                      option_value: { type: 'keyword' }
-                    }
-                  }
+              
+              value_axis: 
+              { // array of nested object
+                type: 'nested',
+                properties: 
+                {
+                  
+                  function_key: { type: 'keyword' }, // valid value from  key in DASHBOARD_MODULE_FUNCTIONS in es-config.js, like, date_histogram, sum, avg, etc.
+
+                  // all the below fields are mapped with valid values of DASHBOARD_MODULE_FUNCTION_OPTIONS
+                  
+                  aggregationField :  { type: 'keyword' }, // DASHBOARD_MODULE_FUNCTION_OPTIONS -> aggregationField
+                  timeZone :  { type: 'keyword' },  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> timeZone
+                  fixed_interval :  { type: 'keyword' },  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> fixed_interval
+                  size : { type: 'integer' },  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> size
+                  interval : { type: 'integer' },  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> interval
+                  min_doc_count : { type: 'integer' },  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> min_doc_count
+                  terms_size : { type: 'integer' },  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> terms_size
+                  missing : { type: 'keyword' },  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> missing
+                  color : { type: 'keyword' }  // DASHBOARD_MODULE_FUNCTION_OPTIONS -> color
+                    
                 }
               }
             }
           }
         };
+        
 
-    // Add other indexes here
-    case 'other_index':
-      return {
-        mappings: {
-          properties: {
-            // Your mapping for other_index
-          }
-        }
-      };
-    default:
-      throw new Error(`No mapping found for index: ${indexName}`);
+        // case 'dashboard_modules':
+        // return {
+        //   mappings: {
+        //     properties: {
+        //       title: { type: 'text' },
+        //       userid: { type: 'keyword' },
+        //       filter_s: { type: 'text' },
+        //       data_view: { type: 'keyword' },
+        //       module_type: { type: 'keyword' },
+        //       dashboard_id: { type: 'keyword' },
+        //       create_time: { type: 'date', format: 'epoch_millis' },
+        //       main_axis: {
+        //         type: 'nested',
+        //         properties: {
+        //           function_key: { type: 'keyword' },
+        //           field_name: { type: 'keyword' },
+        //           options: {
+        //             type: 'nested',
+        //             properties: {
+        //               option_name: { type: 'keyword' },
+        //               option_value: { type: 'keyword' }
+        //             }
+        //           }
+        //         }
+        //       },
+        //       value_axis: {
+        //         type: 'nested', 
+        //         properties: {
+        //           function_key: { type: 'keyword' },
+        //           field_name: { type: 'keyword' },
+        //           options: {
+        //             type: 'nested',
+        //             properties: {
+        //               option_name: { type: 'keyword' },
+        //               option_value: { type: 'keyword' }
+        //             }
+        //           }
+        //         }
+        //       }
+        //     }
+        //   }
+        // };
+
+      
+        default:
+          throw new Error(`No mapping found for index: ${indexName}`);
   }
 }
+
 
 // Function to create the index
 async function createIndex(indexName) {

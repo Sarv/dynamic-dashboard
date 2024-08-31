@@ -2,7 +2,7 @@
 
 
 const path = require('path');
-const { DASHBOARD_MODULE_FUNCTION_OPTIONS, DASHBOARD_MODULE_FUNCTIONS, DASHBOARD_MODULE_TYPES, DATA_VIEW, ES_INDEX_MAP } = require(path.join(__dirname, 'es-config.js'));
+const { DASHBOARD_MODULE_FUNCTION_OPTIONS, DASHBOARD_MODULE_FUNCTIONS, DASHBOARD_MODULE_TYPES, DATA_VIEW, ES_INDEX_MAP } = require(path.join(__dirname, 'module_constants.js'));
 
 
 
@@ -372,7 +372,7 @@ function d_validate_AxisExists(input) {
 
  */
 function d_validate_AxisFrequency(input) {
-
+    
     // Get the module type configuration from DASHBOARD_MODULE_TYPES
     const moduleTypeConfig = DASHBOARD_MODULE_TYPES[input.module_type];
     if (!moduleTypeConfig) {
