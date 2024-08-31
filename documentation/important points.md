@@ -54,4 +54,5 @@ Pending Tasks
         - list of valid data views
         - list of fields in that data view
     - masking of actual database fields of data_view. Fields which are in mask list are allowed to pass from frontend
+    - need to review flow of heatmap in module create api (color and other properties)
     
