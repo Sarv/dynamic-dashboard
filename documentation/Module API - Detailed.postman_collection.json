@@ -1,0 +1,228 @@
+{
+	"info": {
+		"_postman_id": "2d0c0df4-f508-4936-9467-150e37286827",
+		"name": "Module API - Detailed",
+		"description": "A comprehensive collection for testing and documenting the Module API endpoints, including valid and invalid value examples.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6441366",
+		"_collection_link": "https://sarvapi.postman.co/workspace/66f5d5cb-6d3b-4d29-98b0-e3028e100213/collection/6441366-2d0c0df4-f508-4936-9467-150e37286827?action=share&source=collection_link&creator=6441366"
+	},
+	"item": [
+		{
+			"name": "Create Module",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"data_view\" : \"stock_market\",\n    \" module_type\" : \"pie_chart\",\n    \"main_axis\" : [{\n       \"functionType\":  \"date_histogram\",\n        \"aggregationField\": \"status\",\n        \"fixed_interval\": \"1h\",\n        \"min_doc_count\" : 1\n    },\n    {\n       \"functionType\":  \"date_histogram\",\n        \"aggregationField\": \"status\",\n        \"fixed_interval\": \"1h\",\n        \"min_doc_count\" : 1\n    }],\n   \"value_axis\" : [{\n        \"functionType\":  \"sum\",\n        \"aggregationField\": \"status\"\n       \n    }]\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/module/create",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"module",
+						"create"
+					]
+				},
+				"description": "Creates a new module with the provided details.\n\n**Valid Values:**\n- moduleTitle: Any non-empty string\n- moduleType: 'bar_chart', 'line_chart', 'pie_chart', etc. (must match types in DASHBOARD_MODULE_TYPES)\n- dataView: String matching an existing data view\n- filter: String in the format 'key:value'\n- userId: Non-empty string\n- dashboardId: Non-empty string\n- mainAxis.function: Function compatible with the module type's main axis (e.g., 'date_histogram', 'terms')\n- valueAxis.function: Function compatible with the module type's value axis (e.g., 'sum', 'avg')\n\n**Invalid Values:**\n- moduleTitle: Empty string or non-string values\n- moduleType: Any string not defined in DASHBOARD_MODULE_TYPES\n- mainAxis.function or valueAxis.function: Functions incompatible with the module type\n\n**Response:**\n\n```json\n{\n    \"message\": \"Module created successfully\",\n    \"id\": \"generated-module-id\"\n}\n```\n\n**Possible Error Codes:**\n- INVALID_MODULE_TYPE\n- INVALID_MODULE_FUNCTION\n- INCOMPATIBLE_FUNCTION_AXIS\n- MISSING_REQUIRED_OPTION\n- INVALID_OPTION_VALUE\n- UNKNOWN_OPTION\n- ELASTICSEARCH_ERROR"
+			},
+			"response": []
+		},
+		{
+			"name": "Update Module",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{moduleId}}\",\n    \"moduleTitle\": \"Updated Sales Chart\",\n    \"filter\": \"year:2023,quarter:Q2\",\n    \"mainAxis\": {\n        \"function\": \"date_histogram\",\n        \"field\": \"sale_date\",\n        \"interval\": \"month\"\n    }\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/module/update",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"module",
+						"update"
+					]
+				},
+				"description": "Updates an existing module with the provided details.\n\n**Valid Values:**\n- id: Existing module ID\n- Any fields from the Create Module endpoint can be updated with valid values\n\n**Invalid Values:**\n- id: Non-existent module ID\n- Any invalid values as described in the Create Module endpoint\n\n**Response:**\n\n```json\n{\n    \"message\": \"Module updated successfully\",\n    \"id\": \"updated-module-id\",\n    \"module\": {\n        // Updated module details\n    }\n}\n```\n\n**Possible Error Codes:**\n- INVALID_ID\n- MODULE_NOT_FOUND\n- INVALID_MODULE_TYPE\n- INVALID_MODULE_FUNCTION\n- INCOMPATIBLE_FUNCTION_AXIS\n- MISSING_REQUIRED_OPTION\n- INVALID_OPTION_VALUE\n- UNKNOWN_OPTION\n- ELASTICSEARCH_ERROR"
+			},
+			"response": []
+		},
+		{
+			"name": "List Modules",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/module/list?limit=10&moduleType=bar_chart&dataView=sales_data&userId=user123&dashboardId=dashboard456&sortField=create_time&sortOrder=desc&searchAfter={{searchAfter}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"module",
+						"list"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10",
+							"description": "Number of results per page (default: 10)"
+						},
+						{
+							"key": "moduleType",
+							"value": "bar_chart",
+							"description": "Filter by module type"
+						},
+						{
+							"key": "dataView",
+							"value": "sales_data",
+							"description": "Filter by data view"
+						},
+						{
+							"key": "userId",
+							"value": "user123",
+							"description": "Filter by user ID"
+						},
+						{
+							"key": "dashboardId",
+							"value": "dashboard456",
+							"description": "Filter by dashboard ID"
+						},
+						{
+							"key": "sortField",
+							"value": "create_time",
+							"description": "Field to sort by (default: create_time)"
+						},
+						{
+							"key": "sortOrder",
+							"value": "desc",
+							"description": "Sort order (asc or desc, default: desc)"
+						},
+						{
+							"key": "searchAfter",
+							"value": "{{searchAfter}}",
+							"description": "Pagination token from previous response"
+						}
+					]
+				},
+				"description": "Retrieves a list of modules based on the provided filters.\n\n**Valid Values:**\n- limit: Positive integer\n- moduleType: Any valid module type\n- dataView: Existing data view name\n- userId: Existing user ID\n- dashboardId: Existing dashboard ID\n- sortField: Any field name in the module document\n- sortOrder: 'asc' or 'desc'\n- searchAfter: Token provided in the previous response\n\n**Invalid Values:**\n- limit: Negative numbers or non-integers\n- sortOrder: Any value other than 'asc' or 'desc'\n\n**Response:**\n\n```json\n{\n    \"modules\": [\n        {\n            \"id\": \"module-id-1\",\n            \"moduleTitle\": \"Sales Chart\",\n            \"moduleType\": \"bar_chart\",\n            \"dataView\": \"sales_data\",\n            \"createdAt\": 1621234567890,\n            \"updatedAt\": 1621234567890\n        },\n        // ... more modules\n    ],\n    \"totalModules\": 50,\n    \"nextSearchAfter\": \"1621234567890_module-id-1\"\n}\n```\n\n**Possible Error Codes:**\n- ELASTICSEARCH_ERROR"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Module",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{moduleId}}\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/module/delete",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"module",
+						"delete"
+					]
+				},
+				"description": "Soft deletes a module by setting its status to deleted.\n\n**Valid Values:**\n- id: Existing module ID\n\n**Invalid Values:**\n- id: Non-existent module ID or empty string\n\n**Response:**\n\n```json\n{\n    \"message\": \"Module deleted successfully\",\n    \"id\": \"deleted-module-id\"\n}\n```\n\n**Possible Error Codes:**\n- INVALID_ID\n- MODULE_NOT_FOUND\n- ELASTICSEARCH_ERROR"
+			},
+			"response": []
+		},
+		{
+			"name": "Clone Module",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"newModuleTitle\": \"Cloned Sales Chart\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/module/clone/{{moduleId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"module",
+						"clone",
+						"{{moduleId}}"
+					]
+				},
+				"description": "Clones an existing module with an optional new title.\n\n**Valid Values:**\n- moduleId (in URL): Existing module ID\n- newModuleTitle (in body): Non-empty string (optional)\n\n**Invalid Values:**\n- moduleId: Non-existent module ID\n- newModuleTitle: Empty string (if provided)\n\n**Response:**\n\n```json\n{\n    \"message\": \"Module cloned successfully\",\n    \"id\": \"cloned-module-id\"\n}\n```\n\n**Possible Error Codes:**\n- INVALID_ID\n- MODULE_NOT_FOUND\n- ELASTICSEARCH_ERROR"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "moduleId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "searchAfter",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
