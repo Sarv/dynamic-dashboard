@@ -4,18 +4,29 @@ const { d_validation_main } = require('./dynamic-dashboard-functions.js');
 
 const input = 
 {
-    data_view : "stock_market",
     module_type : "pie_chart",
-    main_axis : [{
-        functionType:  "date_histogram",
-        aggregationField: "status",
-        fixed_interval: '1h',
-        min_doc_count : 1
+    "main_axis" : [{
+       "functionType":  "top_values",
+       "aggregationType" : "terms",
+        "aggregationField": "did",
+        "missing" : "__missing__",
+        "terms_size" : 5
+    },
+    {
+       "functionType":  "top_values",
+       "aggregationType" : "terms",
+        "aggregationField": "callLiveStatus",
+        "terms_size" : 3
     }],
-    value_axis : [{
-        functionType:  "sum",
-        aggregationField: "status"
-       
+   "value_axis" : [{
+        "functionType":  "avg",
+        "aggregationType" : "avg",
+        "aggregationField": "duration.lastFirst"
+    },
+    {
+        "functionType":  "sum",
+        "aggregationType" : "sum",
+        "aggregationField": "holdCount"
     }]
 };
 

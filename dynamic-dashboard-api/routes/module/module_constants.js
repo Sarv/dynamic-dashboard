@@ -51,7 +51,8 @@ module.exports = {
     },
 
 
-
+    
+  
 
 
 
@@ -271,7 +272,16 @@ module.exports = {
             name: 'Count',
             validDataTypes: ['all'],
             description: 'Counts the number of documents in the index.',
-            axis: 'value'  // Used to calculate the count of documents (value axis)
+            axis: 'value',  // Used to calculate the count of documents (value axis)
+            options: {
+                required: {
+                    
+                },
+                
+                optional: {
+                    
+                }
+            }
         },
         value_count: {
             name: 'Value Count', // if count is applied on a perticular field instead of Records
