@@ -66,70 +66,77 @@ module.exports = {
     DASHBOARD_MODULE_TYPES: {
         // Bar Horizontal Chart
         bar_horizontal: {
-            graphType: 'Bar Horizontal', // Name of the chart type
+            title: 'Bar Horizontal', // Name of the chart type
             mainAxis: 'y', // Main axis used for categories (horizontal in this case)
             mainAxisFrequency: 'Single', // Single category field allowed on the y-axis
             valueAxis: 'x', // Value axis used for metrics (vertical values)
             valueAxisFrequency: 'Multiple', // Multiple metrics/fields allowed on the x-axis
-            colorAxis: 'value' // Color is applied to the value axis (x) as the main axis has a single value
+            colorAxis: 'value', // Color is applied to the value axis (x) as the main axis has a single value
+            graphType : "bar_horizontal"
         },
         // Bar Horizontal Stacked Chart
         bar_horizontal_stacked: {
-            graphType: 'Bar Horizontal Stacked', // Stacked variant of horizontal bar chart
+            title: 'Bar Horizontal Stacked', // Stacked variant of horizontal bar chart
             mainAxis: 'y', 
             mainAxisFrequency: 'Single', 
             valueAxis: 'x', 
             valueAxisFrequency: 'Multiple', // Multiple fields allowed for stacking on the value axis
-            colorAxis: 'value' // Color is applied to the value axis (x)
+            colorAxis: 'value', // Color is applied to the value axis (x)
+            graphType : 'bar_horizontal_stacked'
         },
         // Bar Horizontal Percentage Chart
         bar_horizontal_percentage: {
-            graphType: 'Bar Horizontal Percentage', // Percentage variant of horizontal bar chart
+            title: 'Bar Horizontal Percentage', // Percentage variant of horizontal bar chart
             mainAxis: 'y', 
             mainAxisFrequency: 'Single', 
             valueAxis: 'x', 
             valueAxisFrequency: 'Multiple', 
-            colorAxis: 'value' // Color is applied to the value axis (x)
+            colorAxis: 'value', // Color is applied to the value axis (x)
+            graphType: 'bar_horizontal_percentage'
         },
         // Bar Vertical Chart
         bar_vertical: {
-            graphType: 'Bar Vertical', // Standard vertical bar chart
+            title: 'Bar Vertical', // Standard vertical bar chart
             mainAxis: 'x', // Main axis is vertical for categories
             mainAxisFrequency: 'Single', 
             valueAxis: 'y', // Value axis is horizontal for metrics
             valueAxisFrequency: 'Multiple', // Multiple metrics can be plotted on the value axis
-            colorAxis: 'value' // Color is applied to the value axis (y)
+            colorAxis: 'value', // Color is applied to the value axis (y)
+            graphType : "bar_vertical"
         },
         // Bar Vertical Stacked Chart
         bar_vertical_stacked: {
-            graphType: 'Bar Vertical Stacked', 
+            title: 'Bar Vertical Stacked', 
             mainAxis: 'x', 
             mainAxisFrequency: 'Single', 
             valueAxis: 'y', 
             valueAxisFrequency: 'Multiple', 
-            colorAxis: 'value' // Color is applied to the value axis (y)
+            colorAxis: 'value', // Color is applied to the value axis (y)
+            graphType : "bar_vertical_stacked"
         },
         // Bar Vertical Percentage Chart
         bar_vertical_percentage: {
-            graphType: 'Bar Vertical Percentage', 
+            title: 'Bar Vertical Percentage', 
             mainAxis: 'x', 
             mainAxisFrequency: 'Single', 
             valueAxis: 'y', 
             valueAxisFrequency: 'Multiple', 
-            colorAxis: 'value' // Color is applied to the value axis (y)
+            colorAxis: 'value', // Color is applied to the value axis (y)
+            graphType: 'bar_vertical_percentage'
         },
         // Line Chart
         line_chart: {
-            graphType: 'Line Chart', // Standard line chart
+            title: 'Line Chart', // Standard line chart
             mainAxis: 'x', // Main axis is horizontal (typically for time or categories)
             mainAxisFrequency: 'Single', 
             valueAxis: 'y', // Value axis is vertical (for the metrics plotted over time)
             valueAxisFrequency: 'Multiple', // Multiple metrics can be plotted on the value axis
-            colorAxis: 'value' // Color is applied to the value axis (y)
+            colorAxis: 'value', // Color is applied to the value axis (y)
+            graphType : "line"
         },
         // Area Stacked Chart
         area_stacked: {
-            graphType: 'Area Stacked', // Stacked area chart
+            title: 'Area Stacked', // Stacked area chart
             mainAxis: 'x', 
             mainAxisFrequency: 'Single', 
             valueAxis: 'y', 
@@ -138,7 +145,7 @@ module.exports = {
         },
         // Area Percentage Chart
         area_percentage: {
-            graphType: 'Area Percentage', // Area chart with values displayed as percentages
+            title: 'Area Percentage', // Area chart with values displayed as percentages
             mainAxis: 'x', 
             mainAxisFrequency: 'Single', 
             valueAxis: 'y', 
@@ -147,7 +154,7 @@ module.exports = {
         },
         // Heat Map
         heat_map: {
-            graphType: 'Heat Map', // Heatmap visualization
+            title: 'Heat Map', // Heatmap visualization
             mainAxis: ['x', 'y'], // Heatmaps use both x and y axes as main axes
             mainAxisFrequency: 'Single', // Both x and y axes allow only a single field each
             valueAxis: 'z', // Non-standard axis for value, represented by color intensity
@@ -157,7 +164,7 @@ module.exports = {
         },
         // Scatter Plot
         scatter_plot: {
-            graphType: 'Scatter Plot', // Scatter plot chart
+            title: 'Scatter Plot', // Scatter plot chart
             mainAxis: null, // No main axis used
             mainAxisFrequency: 'N/A', // Not applicable for scatter plots
             valueAxis: ['x', 'y'], // Both x and y axes represent numeric values
@@ -166,16 +173,18 @@ module.exports = {
         },
         // Pie Chart
         pie_chart: {
-            graphType: 'Pie Chart', // Pie chart visualization
+            title: 'Pie Chart', // Pie chart visualization
             mainAxis: 'x', // Categories sliced by x-axis (multiple slices)
             mainAxisFrequency: 'Multiple', // Multiple categories for slicing
             valueAxis: 'y', // Metric determining the size of each slice
             valueAxisFrequency: 'Single', // Only one metric allowed for slice size
-            colorAxis: 'main' // Color is applied to the main axis (x) for categories
+            colorAxis: 'main', // Color is applied to the main axis (x) for categories
+            graphType : "sunburst"
+
         },
         // Donut Chart
         donut_chart: {
-            graphType: 'Donut Chart', // Donut chart visualization
+            title: 'Donut Chart', // Donut chart visualization
             mainAxis: 'x', // Categories sliced by x-axis (multiple slices)
             mainAxisFrequency: 'Multiple', 
             valueAxis: 'y', // Metric determining the size of each slice
@@ -184,7 +193,7 @@ module.exports = {
         },
         // Metric Visualization
         metric: {
-            graphType: 'Metric', // Single number visualization (e.g., total sales, count)
+            title: 'Metric', // Single number visualization (e.g., total sales, count)
             mainAxis: null, // No main axis used
             mainAxisFrequency: 'N/A', // Not applicable for metrics
             valueAxis: 'y', // Single value to display
@@ -193,7 +202,7 @@ module.exports = {
         },
         // Data Table
         data_table: {
-            graphType: 'Data Table', // Tabular representation of data
+            title: 'Data Table', // Tabular representation of data
             mainAxis: 'x', // Grouping columns (could be multiple fields)
             mainAxisFrequency: 'Multiple', // Allows multiple fields for grouping
             valueAxis: 'y', // Metrics to be displayed in the table columns

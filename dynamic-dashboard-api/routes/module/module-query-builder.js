@@ -200,66 +200,59 @@ function buildValueAggregations(valueAxis, startIndex, mapping) {
 
 
 // Example usage
-const input = {
-  "main_axis": [
-    
-    { 
-        "functionType": "top_values", 
-        "aggregationField": "callLiveStatus", 
-        "missing": "__missing__", 
-        "terms_size": 3,
-        "order": {
-            "field": "value_axis.1",
-            "direction": "desc"
-          }
-    },
-      
-    { 
-        "functionType": "top_values", 
-        "aggregationField": "callStatus", 
-        "missing": "__missing__", 
-        "terms_size": 3,
-        "order": {
-            "field": "value_axis.0",
-            "direction": "desc"
-          }
-      },
-      { 
-        "functionType": "date_histogram", 
-        "aggregationField": "clickTime", 
-        "fixed_interval": "1h"
-      }
-  ],
-  "value_axis": [
-    { "functionType": "avg", "aggregationField": "duration.agentOnCall" },
-    { "functionType": "sum", "aggregationField": "holdCount" },
-    { "functionType": "avg", "aggregationField": "duration.lastFirst" }
-  ]
-};
 // const input = {
-//     "main_axis" : [{
-//         "functionType":  "top_values",
-//             "aggregationField": "did",
-//             "missing" : "__missing__",
-//             "terms_size" : 5
-//         },
-//         {
-//         "functionType":  "top_values",
-//             "aggregationField": "cType",
-//             "terms_size" : 3
-//         }],
-//     "value_axis" : [{
-//             "functionType":  "avg",
-//             "aggregationField": "duration.lastFirst"
-//         },
-//         {
-//             "functionType":  "sum",
-//             "aggregationField": "holdCount"
-//         },
-//         {
-//             "functionType":  "sum",
-//             "aggregationField": "holdCount"
-//         }]
+//   "main_axis": [
+    
+//     { 
+//         "functionType": "top_values", 
+//         "aggregationField": "callLiveStatus", 
+//         "missing": "__missing__", 
+//         "terms_size": 3,
+//         "order": {
+//             "field": "value_axis.1",
+//             "direction": "desc"
+//           }
+//     },
+      
+//     { 
+//         "functionType": "top_values", 
+//         "aggregationField": "callStatus", 
+//         "missing": "__missing__", 
+//         "terms_size": 3,
+//         "order": {
+//             "field": "value_axis.0",
+//             "direction": "desc"
+//           }
+//       },
+//       { 
+//         "functionType": "date_histogram", 
+//         "aggregationField": "clickTime", 
+//         "fixed_interval": "1h"
+//       }
+//   ],
+//   "value_axis": [
+//     { "functionType": "avg", "aggregationField": "duration.agentOnCall" },
+//     { "functionType": "sum", "aggregationField": "holdCount" },
+//     { "functionType": "avg", "aggregationField": "duration.lastFirst" }
+//   ]
 // };
+
+
+const input = {
+    "main_axis" : [{
+        "functionType":  "top_values",
+            "aggregationField": "did",
+            "missing" : "__missing__",
+            "terms_size" : 5
+        }],
+    "value_axis" : [{
+            "functionType":  "avg",
+            "aggregationField": "duration.lastFirst"
+        },
+        {
+          "functionType":  "sum",
+          "aggregationField": "holdCount"
+      }]
+};
 const query = buildElasticsearchQuery(input);
 console.log(JSON.stringify(query, null, 2));
