@@ -198,7 +198,8 @@ module.exports = {
             mainAxisFrequency: 'N/A', // Not applicable for metrics
             valueAxis: 'y', // Single value to display
             valueAxisFrequency: 'Single', // Only one value is shown
-            colorAxis: 'value' // Color is applied to the value axis (y) for emphasis
+            colorAxis: 'value', // Color is applied to the value axis (y) for emphasis
+            graphType : "metric"
         },
         // Data Table
         data_table: {
@@ -207,7 +208,8 @@ module.exports = {
             mainAxisFrequency: 'Multiple', // Allows multiple fields for grouping
             valueAxis: 'y', // Metrics to be displayed in the table columns
             valueAxisFrequency: 'Multiple', // Allows multiple metrics in the table
-            colorAxis: 'N/A' // Color is not typically applied in data tables
+            colorAxis: 'N/A', // Color is not typically applied in data tables
+            graphType : "data_table"
         }
     },
 

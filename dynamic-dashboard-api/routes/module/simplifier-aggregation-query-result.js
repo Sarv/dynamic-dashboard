@@ -57,6 +57,7 @@ function parseForDataTable(result, mapping) {
                             ...currentPath, 
                             [aggInfo.aggNum]: bucket.key,
                             [`${aggInfo.aggNum}_doc_count`]: bucket.doc_count
+
                         };
                         if (aggInfo.child) {
                             traverse(bucket, aggInfo.child, newPath);

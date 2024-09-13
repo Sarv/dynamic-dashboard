@@ -101,7 +101,7 @@ const mapping = {
 
 
 
-const simplifiedData = parseAggregationResult(esResult, mapping, "data_table");
+const simplifiedData = parseAggregationResult(esResult, mapping, "bar_vertical_percentage");
 
 // console.log(JSON.stringify(simplifiedData, null, 2));
 
