@@ -578,3 +578,137 @@ The Elasticsearch Query Builder provides a sophisticated solution for dynamicall
 5. **Error Handling**: Includes validation and error reporting for invalid inputs.
 
 This tool significantly simplifies the process of creating complex Elasticsearch aggregations, making it easier to generate, understand, and process sophisticated analytical queries.
+
+
+
+# [UPDATE] Expanded Notes on Count FunctionType Input
+
+## Overview
+
+The `count` functionType is used to get the count of records in an Elasticsearch query. This document outlines how to properly include this functionType in your input, explains special cases that require additional handling, and distinguishes between `count` and `value_count`.
+
+## Basic Usage
+
+To include a count in your query, add a `count` functionType to the `value_axis` array in your input object:
+
+```javascript
+const input = {
+  "value_axis": [
+    {
+      "functionType": "count"
+    }
+    // ... other value_axis entries
+  ]
+  // ... main_axis entries if applicable
+};
+```
+
+## Detecting Count Functionality
+
+The presence of a `count` functionType can be easily checked using the "mapping" key in the result of `buildElasticsearchQuery`. The output will look like this:
+
+```javascript
+"mapping": {
+  "1": {
+    "aggNum": "1",
+    "axisType": "value_axis",
+    "axisIndex": 0
+  },
+  "count": {
+    "aggNum": "count",
+    "axisType": "value_axis",
+    "axisIndex": 1
+  }
+}
+```
+
+If the "count" key is directly present in the "mapping" object, it indicates that a separate `_count` query needs to be run.
+
+## Count vs. Value_Count
+
+It's important to understand the difference between `count` and `value_count`:
+
+1. **Count**: 
+   - Used for overall record count.
+   - Returns the total number of documents that match the query.
+   - Does not require a specific field to be specified.
+
+2. **Value_Count**:
+   - Used for counting the number of values in a specific field.
+   - Returns the count of documents that have a value in the specified field.
+   - Requires a specific field to be specified in the `aggregationField`.
+
+### Example:
+
+```javascript
+// Count (overall record count)
+{
+  "functionType": "count"
+}
+
+// Value_Count (count of specific field)
+{
+  "functionType": "value_count",
+  "aggregationField": "duration.lastFirst"
+}
+```
+
+## Special Cases
+
+### Count with No Main Axis
+
+When there is no `main_axis` in the input and the `value_axis` contains a `count` functionType, it indicates that the user wants to get a count of all records. However, this scenario requires special handling:
+
+1. The Elasticsearch aggregation query will not return a `doc_count` in the result when there's no `main_axis`.
+2. In this case, a separate `_count` query must be run to get the total count of records.
+
+#### Example:
+
+```javascript
+const input = {
+  "value_axis": [
+    {
+      "functionType": "avg",
+      "aggregationField": "duration.lastFirst"
+    },
+    {
+      "functionType": "count"
+    }
+  ]
+};
+```
+
+#### Required Actions:
+
+1. Run a `_search` aggregation query (with filters) for the `avg` functionType.
+   - The result of this query will be passed to the `parseAggregationResult` function to simplify it for the metric.
+2. Run a separate `_count` query (with filters) for the `count` functionType.
+
+### Implementation Note
+
+When implementing the query builder and result parser, ensure that the system can detect this special case and handle it appropriately. This may involve:
+
+1. Checking for the absence of `main_axis` in the input.
+2. Identifying the presence of a `count` functionType in `value_axis` by looking for the "count" key directly in the "mapping" object.
+3. Splitting the query into two separate Elasticsearch requests when necessary:
+   - A `_search` query for all non-count aggregations.
+   - A `_count` query for the total document count.
+4. Combining the results of both queries in the final output.
+
+## Handling Count in Different Scenarios
+
+1. **With Main Axis**: 
+   - When a `main_axis` is present, the `doc_count` for each bucket will be automatically included in the Elasticsearch response.
+   - No separate `_count` query is needed.
+
+2. **Without Main Axis**:
+   - A separate `_count` query is required to get the total document count.
+   - The "count" key will be directly present in the "mapping" object.
+
+3. **Value_Count**:
+   - Treated like any other aggregation in the `_search` query.
+   - No separate query is needed, regardless of the presence or absence of a `main_axis`.
+
+## Conclusion
+
+Understanding the nuances between `count` and `value_count`, and how to detect and handle special cases, is crucial for building accurate and efficient Elasticsearch queries. By implementing the necessary logic to handle these different scenarios, you can ensure that your Elasticsearch query builder provides comprehensive and accurate results to users, whether they're looking for overall document counts or specific field value counts.

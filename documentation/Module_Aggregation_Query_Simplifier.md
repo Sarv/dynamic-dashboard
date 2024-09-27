@@ -434,3 +434,309 @@ This detailed explanation of `parseAggregationResult` should provide a clear und
 6. Add unit tests to ensure reliability and ease future modifications.
 
 This documentation provides a comprehensive overview of the Elasticsearch Aggregation Query Result Simplifier, its implementation, usage, and considerations for future development. It should serve as a guide for understanding, using, and potentially extending this tool.
+
+
+
+
+# simplifier-aggregation-query-result.js - Updated Notes
+
+### Overview
+
+This file contains functions to parse and simplify Elasticsearch aggregation results for various visualization types. It supports different graph types and uses custom mapping for axis titles and values.
+
+### Main Function: parseAggregationResult
+
+```javascript
+function parseAggregationResult(result, mapping, graphType = 'data_table', map_axis_titles = {}, map_value_title = {})
+```
+
+#### Parameters:
+- `result`: Elasticsearch aggregation result
+- `mapping`: Object describing the structure of aggregations
+- `graphType`: Type of visualization (default: 'data_table')
+- `map_axis_titles`: Custom titles for axes
+- `map_value_title`: Custom titles for axis values
+
+#### Supported Graph Types:
+- data_table
+- bar_horizontal, bar_vertical, bar_horizontal_stacked, bar_vertical_stacked, bar_vertical_percentage, bar_horizontal_percentage
+- line
+- pie
+- sunburst
+- metric (newly added)
+
+### Helper Functions
+
+#### getValueTitle
+```javascript
+function getValueTitle(map_value_title, axisType, index, value)
+```
+Retrieves custom title for a value if available.
+
+#### getAxisTitle
+```javascript
+function getAxisTitle(map_axis_titles, axisType, index)
+```
+Retrieves custom title for an axis if available.
+
+#### roundToTwoDecimals
+```javascript
+function roundToTwoDecimals(value)
+```
+Rounds a number to two decimal places.
+
+
+#### parseForMetric (New)
+Parses result for metric visualization, handling single value outputs.
+
+### Key Features
+
+1. **Flexible Parsing**: Adapts to different graph types and aggregation structures.
+2. **Custom Naming**: Uses `map_axis_titles` and `map_value_title` for custom labeling.
+3. **Value Rounding**: Consistently rounds numeric values to two decimal places.
+4. **Nested Structure Handling**: Capable of parsing deeply nested aggregation results.
+5. **Metric Support**: New support for metric-type visualizations, useful for single-value displays.
+
+### Usage Notes
+
+- Ensure `mapping` object correctly reflects the Elasticsearch aggregation structure.
+- Provide `map_axis_titles` and `map_value_title` for custom labeling in visualizations.
+- For metric-type visualizations, use the new `parseForMetric` function.
+- The function adapts its output based on the specified `graphType`.
+
+## Documentation for `map_value_title` and `map_axis_titles`
+
+### Overview
+
+`map_value_title` and `map_axis_titles` are two important mapping objects used in the Elasticsearch query result parser. They allow for custom labeling and titling of axes and values in the generated visualizations.
+
+### `map_axis_titles`
+
+#### Purpose
+`map_axis_titles` is used to provide custom titles for the axes in the visualization.
+
+#### Structure
+```javascript
+{
+  "main_axis": {
+    "0": "Custom Title for Main Axis 0",
+    "1": "Custom Title for Main Axis 1"
+    // ... more main axis mappings
+  },
+  "value_axis": {
+    "0": "Custom Title for Value Axis 0",
+    "1": "Custom Title for Value Axis 1"
+    // ... more value axis mappings
+  }
+}
+```
+
+#### Usage
+- The keys "main_axis" and "value_axis" correspond to the two types of axes.
+- The numeric keys ("0", "1", etc.) represent the index of each aggregation within its axis type.
+- The values are the custom titles you want to display for each axis.
+
+#### Example
+```javascript
+const map_axis_titles = {
+  "main_axis": {
+    "0": "Top DIDs",
+    "1": "Top Call Status"
+  },
+  "value_axis": {
+    "0": "Avg Call Duration",
+    "1": "Doc Count"
+  }
+};
+```
+
+### `map_value_title`
+
+#### Purpose
+`map_value_title` is used to provide custom labels for specific values within each axis.
+
+#### Structure
+```javascript
+{
+  "main_axis": {
+    "0": {
+      "actual_value_1": "Custom Label 1",
+      "actual_value_2": "Custom Label 2"
+    },
+    "1": {
+      "actual_value_3": "Custom Label 3",
+      "actual_value_4": "Custom Label 4"
+    }
+  }
+}
+```
+
+#### Usage
+- The outermost key "main_axis" indicates that this mapping is for main axis values.
+- The next level of keys ("0", "1", etc.) represent the index of each main axis aggregation.
+- The innermost key-value pairs map actual values to their custom labels.
+
+#### Example
+```javascript
+const map_value_title = {
+  "main_axis": {
+    "0": {
+      "915223116800": "Main DID",
+      "915224948850": "Secondary DID"
+    },
+    "1": {
+      "3": "Answered",
+      "4": "Unanswered",
+      "5": "Pending"
+    }
+  }
+};
+```
+
+#### Important Notes
+1. `map_value_title` is typically not used for `value_axis` because changing the actual values could interfere with numerical representations in graphs.
+2. If a value doesn't have a mapping, the original value will be used.
+
+### Implementation
+
+When parsing the Elasticsearch query results:
+
+1. Use `map_axis_titles` to replace default axis titles with custom ones.
+2. Use `map_value_title` to replace actual values with custom labels in the main axes.
+
+Example usage in code:
+
+```javascript
+function getAxisTitle(map_axis_titles, axisType, index) {
+    if (map_axis_titles && map_axis_titles[axisType] && map_axis_titles[axisType][index]) {
+        return map_axis_titles[axisType][index];
+    }
+    return false; // or a default value
+}
+
+function getValueTitle(map_value_title, axisType, index, value) {
+    if (map_value_title && map_value_title[axisType] && 
+        map_value_title[axisType][index] && map_value_title[axisType][index][value]) {
+        return map_value_title[axisType][index][value];
+    }
+    return value; // return original value if no mapping found
+}
+```
+
+By using these mapping objects, you can create more user-friendly and context-specific visualizations of your Elasticsearch data.
+
+
+## parseForMetric Function Documentation
+
+### Overview
+
+The `parseForMetric` function is designed to process Elasticsearch aggregation results and convert them into a simplified format suitable for metric visualizations. It takes the raw Elasticsearch result, a mapping object, and an axis title mapping to produce a clean, key-value pair output.
+
+### Function Signature
+
+```javascript
+function parseForMetric(result, mapping, map_axis_titles)
+```
+
+#### Parameters
+
+1. `result` (Object): The raw Elasticsearch aggregation result.
+2. `mapping` (Object): A mapping of aggregation names to their configurations.
+3. `map_axis_titles` (Object): A mapping of axis indices to their custom titles.
+
+#### Return Value
+
+An object where keys are the axis titles (or default names if no title is provided) and values are the corresponding metric values.
+
+### Input Structures
+
+#### `result` (Elasticsearch Aggregation Result)
+
+```javascript
+{
+  "aggregations": {
+    "1": {
+      "value": 8385084
+    },
+    "2": {
+      "value": 8827775
+    }
+    // ... potentially more aggregations
+  }
+  // ... other Elasticsearch response fields
+}
+```
+
+#### `mapping`
+
+```javascript
+{
+  "1": {
+    "aggNum": "1",
+    "axisType": "value_axis",
+    "axisIndex": 0
+  },
+  "2": {
+    "aggNum": "2",
+    "axisType": "value_axis",
+    "axisIndex": 1
+  }
+  // ... potentially more mappings
+}
+```
+
+#### `map_axis_titles`
+
+```javascript
+{
+  "value_axis": {
+    "0": "Avg Call Duration",
+    "1": "Doc Count"
+    // ... potentially more title mappings
+  }
+}
+```
+
+### Output
+
+```javascript
+{
+  "Avg Call Duration": 8385084,
+  "Doc Count": 8827775
+  // ... potentially more key-value pairs
+}
+```
+
+### Aggregation Name to Title Mapping Process
+
+1. The function iterates through each key in the `mapping` object.
+2. For each key (aggregation name):
+   a. It checks if the `axisType` is "value_axis".
+   b. If so, it looks up the corresponding result in the Elasticsearch aggregation result.
+   c. It then determines the axis title:
+      - First, it checks `map_axis_titles[aggInfo.axisType][aggInfo.axisIndex]` for a custom title.
+      - If no custom title is found, it falls back to a default name like `Value ${aggInfo.axisIndex}`.
+   d. The function then associates the determined title with the aggregation value in the output object.
+
+### Example
+
+Given the inputs shown above, the function would process them as follows:
+
+1. For aggregation "1":
+   - Finds the value 8385084 in the result
+   - Looks up the axis index (0) in the mapping
+   - Finds the custom title "Avg Call Duration" in `map_axis_titles`
+   - Adds `"Avg Call Duration": 8385084` to the output
+
+2. For aggregation "2":
+   - Finds the value 8827775 in the result
+   - Looks up the axis index (1) in the mapping
+   - Finds the custom title "Doc Count" in `map_axis_titles`
+   - Adds `"Doc Count": 8827775` to the output
+
+### Notes
+
+- The function uses `roundToTwoDecimals()` to format the numeric values. Ensure this helper function is available.
+- If a custom title is not found in `map_axis_titles`, the function will use a default naming scheme.
+- Only aggregations of type "value_axis" are processed. Other types are ignored.
+- The function assumes that the Elasticsearch result contains a value for each aggregation specified in the mapping. Error handling for missing values may need to be implemented based on your specific requirements.

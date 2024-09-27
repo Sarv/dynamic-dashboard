@@ -8,7 +8,7 @@
  * @returns {Object} An object containing data suitable for the specified ECharts graph type.
  */
 
-function parseAggregationResult(result, mapping, graphType = 'data_table') {
+function parseAggregationResult(result, mapping, graphType = 'data_table', map_axis_titles = {},  map_value_title = {}) {
     // console.log("Entering parseAggregationResult with graphType:", graphType);
     let parsedResult;
     switch (graphType) {
@@ -22,18 +22,21 @@ function parseAggregationResult(result, mapping, graphType = 'data_table') {
         case 'bar_vertical_percentage':
         case 'bar_horizontal_percentage':
         case 'line':
-            parsedResult = parseForBarOrLine(result, mapping, graphType);
+            parsedResult = parseForBarOrLine(result, mapping, graphType, map_axis_titles,  map_value_title);
             break;
         case 'pie':
-            parsedResult = parseForPie(result, mapping);
+            parsedResult = parseForPie(result, mapping, map_value_title);
             break;
         case 'sunburst':
-            parsedResult = parseForSunburst(result, mapping);
+            parsedResult = parseForSunburst(result, mapping, map_value_title);
+            break;
+        case 'metric':
+            parsedResult = parseForMetric(result, mapping, map_axis_titles);
             break;
         default:
             throw new Error(`Unsupported graph type: ${graphType}`);
     }
-    console.log("", JSON.stringify(parsedResult, null, 2));
+    // console.log("", JSON.stringify(parsedResult, null, 2));
     return parsedResult;
 }
 
@@ -83,45 +86,50 @@ function parseForDataTable(result, mapping) {
     return parsedResults;
 }
 
-function parseForBarOrLine(result, mapping, graphType) {
+function parseForBarOrLine(result, mapping, graphType, map_axis_titles, map_value_title) {
     const xAxisData = [];
     const seriesData = {};
     let valueAxisCount = 0;
 
-    // console.log("Mapping:", JSON.stringify(mapping, null, 2));
-    // console.log("Result aggregations:", JSON.stringify(result.aggregations, null, 2));
+   
 
-    function traverse(currentResult, currentMapping) {
+    function traverse(currentResult, currentMapping, path = []) {
         if (!currentMapping) return;
 
         Object.keys(currentMapping).forEach(key => {
             const aggInfo = currentMapping[key];
             const aggResult = currentResult?.aggregations?.[key] ?? currentResult?.[key];
 
-            // console.log(`Processing key: ${key}, aggInfo:`, JSON.stringify(aggInfo, null, 2));
-            // console.log(`AggResult:`, JSON.stringify(aggResult, null, 2));
-
             if (aggInfo.axisType === 'main_axis') {
                 if (aggResult && aggResult.buckets) {
                     aggResult.buckets.forEach(bucket => {
-                        xAxisData.push(bucket.key);
-                        // console.log(`Added to xAxisData: ${bucket.key}`);
+                        if (path.length === 0) {
+                            xAxisData.push(getValueTitle(map_value_title, aggInfo.axisType, aggInfo.axisIndex, bucket.key));
+                        }
                         
-                        // Process value_axis aggregations from the 'child' property
                         if (aggInfo.child) {
                             Object.keys(aggInfo.child).forEach(childKey => {
                                 const childAggInfo = aggInfo.child[childKey];
                                 if (childAggInfo.axisType === 'value_axis') {
                                     valueAxisCount++;
-                                    const seriesName = `Value ${childAggInfo.aggNum}`;
+                                    const ax_title = getAxisTitle(map_axis_titles, childAggInfo.axisType, childAggInfo.axisIndex);
+
+                                    const seriesName = childKey === 'count' 
+                                                        ? ((ax_title) ? ax_title :'Records' )
+                                                        : ((ax_title) ? ax_title : (childAggInfo.axisType + " " + childAggInfo.axisIndex));
                                     if (!seriesData[seriesName]) {
                                         seriesData[seriesName] = [];
                                     }
-                                    const value = bucket[childKey]?.value ?? null;
-                                    seriesData[seriesName].push(value);
-                                    // console.log(`Added to seriesData[${seriesName}]: ${value}`);
+                                    let value;
+                                    if (childKey === 'count') {
+                                        value = bucket.doc_count;
+                                    } else {
+                                        value = bucket[childKey]?.value ?? null;
+                                    }
+                                    seriesData[seriesName].push(roundToTwoDecimals(value));
                                 }
                             });
+                            traverse(bucket, aggInfo.child, [...path, bucket.key]);
                         }
                     });
                 }
@@ -131,34 +139,24 @@ function parseForBarOrLine(result, mapping, graphType) {
 
     traverse(result.aggregations, mapping);
 
-    // console.log("Final xAxisData:", xAxisData);
-    // console.log("Final seriesData:", JSON.stringify(seriesData, null, 2));
-
     let defaultStackName = '';
-
     let percentages = false;
     const totalData = [];
 
-    if(graphType=='bar_vertical_percentage' || graphType=='bar_horizontal_percentage')
-    {
+    if(graphType=='bar_vertical_percentage' || graphType=='bar_horizontal_percentage') {
         percentages = true;
         const seriesData_array = Object.values(seriesData);
         
         for (let i = 0; i < seriesData_array[0].length; ++i) {
-        let sum = 0;
-        for (let j = 0; j < seriesData_array.length; ++j) {
-            sum += seriesData_array[j][i];
+            let sum = 0;
+            for (let j = 0; j < seriesData_array.length; ++j) {
+                sum += seriesData_array[j][i];
+            }
+            totalData.push(sum);
         }
-        totalData.push(sum);
-        }
-        // console.log("Final totalData:", JSON.stringify(totalData, null, 2));
     }
-    
 
-   
-
-    if(graphType=="bar_vertical_stacked" || graphType=="bar_horizontal_stacked" || graphType=='bar_vertical_percentage' || graphType=='bar_horizontal_percentage' )
-    {
+    if(graphType=="bar_vertical_stacked" || graphType=="bar_horizontal_stacked" || graphType=='bar_vertical_percentage' || graphType=='bar_horizontal_percentage' ) {
         defaultStackName = 'stack';
     }
 
@@ -167,15 +165,13 @@ function parseForBarOrLine(result, mapping, graphType) {
     let yType = "value";
     let gT = 'bar';
 
-    if(graphType=="line")
-    {
-            gT = 'line';
+    if(graphType=="line") {
+        gT = 'line';
     }
 
-    if(graphType=="bar_horizontal" || graphType=="bar_horizontal_stacked" )
-    {
-         xType = "value";
-         yType = "category";
+    if(graphType=="bar_horizontal" || graphType=="bar_horizontal_stacked" ) {
+        xType = "value";
+        yType = "category";
     }
     
     return {
@@ -189,29 +185,23 @@ function parseForBarOrLine(result, mapping, graphType) {
         legend: {},
         tooltip: {
             trigger: 'axis'
-          },
-
-
+        },
         series: Object.keys(seriesData).map((name, index) => ({
             name: name,
-           
             label: {show : (percentages) ? true : false },
-               
             data: (percentages) ? seriesData[name].map((d, did) =>
                 totalData[did] <= 0 ? 0 : Math.round(d / totalData[did] *100)
-              )
-              : seriesData[name],
-
+            ) : seriesData[name],
             emphasis: {
                 focus: (graphType=="line") ? 'series' : 'none'
-              },
+            },
             type: gT,
             ...(useStack && { stack: defaultStackName })
         }))
     };
 }
 
-function parseForPie(result, mapping) {
+function parseForPie(result, mapping, map_value_title) {
     const data = [];
 
     function traverse(currentResult, currentMapping, path = []) {
@@ -224,13 +214,29 @@ function parseForPie(result, mapping) {
             if (aggInfo.axisType === 'main_axis') {
                 if (aggResult && aggResult.buckets) {
                     aggResult.buckets.forEach(bucket => {
-                        const newPath = [...path, bucket.key];
+                        const newPath = [...path, getValueTitle(map_value_title,  aggInfo.axisType, aggInfo.axisIndex, bucket.key)];
                         if (aggInfo.child) {
                             traverse(bucket, aggInfo.child, newPath);
                         } else {
                             // We've reached the deepest level, add to data
                             const name = newPath.join(' - ');
-                            const value = bucket.doc_count;
+                            let value = 0;
+                            
+                            // Check if there's a 'count' aggregation at this level
+                            if (aggInfo.child && aggInfo.child.count) {
+                                value = bucket.doc_count;
+                            } else {
+                                // Use the first value_axis aggregation if exists, otherwise use doc_count
+                                const firstValueAgg = Object.values(aggInfo.child || {}).find(childAgg => childAgg.axisType === 'value_axis');
+                                if (firstValueAgg) {
+                                    const aggKey = firstValueAgg.aggNum;
+                                    value = bucket[aggKey]?.value ?? 0;
+                                } else {
+                                    value = bucket.doc_count;
+                                }
+                            }
+                            
+                            value = roundToTwoDecimals(value);
                             data.push({ name, value });
                         }
                     });
@@ -238,7 +244,14 @@ function parseForPie(result, mapping) {
             } else if (aggInfo.axisType === 'value_axis') {
                 // We've reached a value_axis, use its value for the pie slice
                 const name = path.join(' - ');
-                const value = aggResult?.value ?? 0; // Use 0 if value is null
+                let value;
+                if (key === 'count') {
+                    value = currentResult.doc_count ?? 0;
+                } else {
+                    value = aggResult?.value ?? 0;
+                }
+                
+                value = roundToTwoDecimals(value);
                 data.push({ name, value });
             }
         });
@@ -247,15 +260,22 @@ function parseForPie(result, mapping) {
     traverse(result.aggregations, mapping);
 
     return {
+        tooltip: {
+            trigger: "item"
+        },
         series: [{
             type: 'pie',
-            data: data
+            data: data,
+            emphasis: {
+                focus: 'ancestor'
+             }
         }]
     };
 }
 
 
-function parseForSunburst(result, mapping) {
+
+function parseForSunburst(result, mapping, map_value_title) {
     function traverse(currentResult, currentMapping, path = []) {
         if (!currentMapping) return null;
 
@@ -269,7 +289,7 @@ function parseForSunburst(result, mapping) {
             if (aggInfo.axisType === 'main_axis') {
                 if (aggResult && aggResult.buckets) {
                     aggResult.buckets.forEach(bucket => {
-                        const newPath = [...path, bucket.key];
+                        const newPath = [...path, getValueTitle(map_value_title,  aggInfo.axisType, aggInfo.axisIndex, bucket.key)];
                         const child = traverse(bucket, aggInfo.child, newPath);
                         if (child) {
                             if (path.length === 0) {
@@ -277,8 +297,8 @@ function parseForSunburst(result, mapping) {
                                 children.push(child);
                             } else {
                                 children.push({
-                                    name: bucket.key,
-                                    value: child.value,
+                                    name: getValueTitle(map_value_title,  aggInfo.axisType, aggInfo.axisIndex, bucket.key),
+                                    value: roundToTwoDecimals(child.value),
                                     ...(child.children && child.children.length > 0 && { children: child.children })
                                 });
                             }
@@ -287,7 +307,11 @@ function parseForSunburst(result, mapping) {
                     });
                 }
             } else if (aggInfo.axisType === 'value_axis') {
-                value = aggResult?.value ?? 0;
+                if (key === 'count') {
+                    value = currentResult.doc_count ?? 0;
+                } else {
+                    value = aggResult?.value ?? 0;
+                }
             }
         });
 
@@ -296,31 +320,89 @@ function parseForSunburst(result, mapping) {
             return children;
         }
 
-        return {
-            name: path[path.length - 1],
-            value: value,
-            ...(children.length > 0 && { children: children })
-        };
+        // If there are no children but we have a value, it's a leaf node
+        if (children.length === 0 && value > 0) {
+            return {
+                name: path[path.length - 1],
+                value: roundToTwoDecimals(value)
+            };
+        }
+
+        // If we have children, return the node with its children
+        if (children.length > 0) {
+            return {
+                name: path[path.length - 1],
+                value: roundToTwoDecimals(value),
+                children: children
+            };
+        }
+
+        // If we have neither children nor value, return null (this node will be pruned)
+        return null;
     }
 
     const data = traverse(result.aggregations, mapping);
 
     return {
+        tooltip: {
+            trigger: "item"
+        },
         series: [{
             type: 'sunburst',
             emphasis: {
                 focus: 'ancestor'
-              },
-            tooltip: {
-                "trigger" : "item"
-            },  
+            },
             data: data,
-            radius: [0, '90%'],
+            radius: ["20%", "100%"],
             label: {
                 rotate: 'radial'
             }
         }]
     };
 }
+
+
+
+
+function parseForMetric(result, mapping, map_axis_titles) {
+    const metricResult = {};
+
+    Object.keys(mapping).forEach(key => {
+        const aggInfo = mapping[key];
+        if (aggInfo.axisType === 'value_axis') {
+            const aggResult = result.aggregations?.[key];
+            if (aggResult && aggResult.value !== undefined) {
+                const axisTitle = getAxisTitle(map_axis_titles, aggInfo.axisType, aggInfo.axisIndex) || `Value ${aggInfo.axisIndex}`;
+                metricResult[axisTitle] = roundToTwoDecimals(aggResult.value);
+            }
+        }
+    });
+
+    return metricResult;
+}
+
+
+
+function getValueTitle(map_value_title, axisType, index, value) {
+    if (map_value_title && map_value_title[axisType] && map_value_title[axisType][index] && map_value_title[axisType][index][value]) {
+        return map_value_title[axisType][index][value];
+    }
+    return value;
+}
+
+
+function getAxisTitle(map_axis_titles, axisType, index) {
+    if (map_axis_titles && map_axis_titles[axisType] && map_axis_titles[axisType][index]) {
+        return map_axis_titles[axisType][index];
+    }
+    // return axisType + " " + index;
+    return false;
+}
+
+
+
+function roundToTwoDecimals(value) {
+    return parseFloat(value.toFixed(2));
+  }
 
 module.exports = { parseAggregationResult };
