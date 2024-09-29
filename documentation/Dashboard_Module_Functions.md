@@ -538,3 +538,4 @@ The `DASHBOARD_MODULE_FUNCTIONS` structure is designed to provide clarity and en
 
 This structure helps developers and AI models understand the expected inputs for each aggregation type, reducing the likelihood of errors and improving the efficiency of the querying process.
 
+https://docs.google.com/document/d/1Tcv6Wxa3KG0h9guzJQ0AuyWkzoGDk_5Q4FXmA4RutTo/edit#heading=h.mpcvb9bp2rbd
